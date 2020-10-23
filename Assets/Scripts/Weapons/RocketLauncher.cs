@@ -17,7 +17,7 @@ public class RocketLauncher : Weapon
         lifeDuration = 30.0f;
         speed = 20.0f;
         //bulletPrefab = (GameObject)Resources.Load("/Prefabs/bullet.prefab");
-        TimeToPressTrigger = 0.1f;
+        TimeToPressTrigger = 0.0f; //0.1f;
         slot = 2;
     }
 
