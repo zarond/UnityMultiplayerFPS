@@ -9,8 +9,10 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 {
     public Rigidbody Character { get; private set; }
     private CapsuleCollider collider;
-    private Vector2 input;
-    private Vector2 MouseInput;
+    [HideInInspector]
+    public Vector2 input;
+    [HideInInspector]
+    public Vector2 MouseInput;
     public float speed = 2f;
     public Transform Cam;
     private Quaternion lastRotation;
@@ -22,7 +24,8 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
     public float RunSpeed;
     //private float VerticalSpeed = 0;
     private Vector3 selfSpeed = new Vector3(0, 0, 0);
-    private bool jump = false;
+    [HideInInspector]
+    public bool jump = false;
     [Range(0f, 1f)]
     public float AirBourneControlIntensity;
 
@@ -36,7 +39,8 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
     public float downforce;
     private Quaternion Correction;
     //
-    public float spd  { get; private set; } = 1.0f;
+    [HideInInspector]
+    public float spd = 1.0f;
     //
     private Vector3 Final_Move;
 
@@ -55,7 +59,7 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 
     void SetLook()
     {
-        MouseInput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        //MouseInput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         Vector3 ToCam = Cam.forward;
 
         cam_rot_v -= MouseInput.y;
@@ -109,11 +113,12 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 
         //WalkOver();
 
-        input.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        //input.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         Vector3 MoveTo = transform.TransformDirection(new Vector3(input.x, 0, input.y));
         MoveTo = Vector3.ClampMagnitude(MoveTo, 1.0f);
-        jump = (Input.GetKey("space") || Input.GetKeyDown("space"));
-        spd = (Input.GetKey(KeyCode.LeftShift)) ? RunSpeed : speed;
+        //jump = (Input.GetKey("space") || Input.GetKeyDown("space"));
+        //spd = (Input.GetKey(KeyCode.LeftShift)) ? RunSpeed : speed;
+
         //isGrounded = true;
 
         RaycastHit hit;

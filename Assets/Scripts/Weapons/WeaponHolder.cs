@@ -11,8 +11,22 @@ public class WeaponHolder : MonoBehaviour
     public int[] Ammo = new int[Constants.GlobalNumberOfWeapons];
     public int[] maxAmmo = new int[Constants.GlobalNumberOfWeapons];
     int ActiveWeapon = 0;
-    int ActiveSlot = 0;
-    bool receivedWeaponChange = false;
+    [HideInInspector]
+    public int ActiveSlot = 0;
+    [HideInInspector]
+    public bool receivedWeaponChange = false;
+    [HideInInspector]
+    public Transform leftHandPoint;
+    [HideInInspector]
+    public Transform rightHandPoint;
+    public bool WeaponPosCorrection;
+    public Transform WeaponHolderObject;
+    public Transform ChestBone;
+    RaycastHit RayCast;
+    [SerializeField]
+    Camera Cam;
+    [HideInInspector]
+    public bool[] shootStates = new bool[3];
 
     // Start is called before the first frame update
     void Start()
@@ -31,13 +45,21 @@ public class WeaponHolder : MonoBehaviour
         maxAmmo[0] = 50;
         maxAmmo[1] = 10;
         */
+
         for (int i = 0; i < Weapons.Count; ++i) Weapons[i].gameObject.SetActive(false);
         Weapons[0].gameObject.SetActive(true);
+        leftHandPoint = Weapons[0].leftHandPoint;
+        rightHandPoint = Weapons[0].rightHandPoint;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (WeaponPosCorrection) {
+           //WeaponHolderObject.position = transform.TransformVector(transform.localRotation * (0.6f * Vector3.forward))+ChestBone.position;
+            WeaponHolderObject.position = transform.forward*0.5f + ChestBone.position+transform.right*0.2f;
+        }
+        /*
         receivedWeaponChange = true;
 
         if (Input.GetKeyDown(KeyCode.Alpha0)) ActiveSlot = 0; else
@@ -51,7 +73,7 @@ public class WeaponHolder : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha8)) ActiveSlot = 8; else
         if (Input.GetKeyDown(KeyCode.Alpha9)) ActiveSlot = 9; else
             receivedWeaponChange = false;
-
+        */
         if (receivedWeaponChange) {
             for (int i = (ActiveWeapon + 1) % (Weapons.Count), c = 0; (c <= Weapons.Count) ; i = (i+1) % (Weapons.Count), ++c) {
                 if (Weapons[i].slot == ActiveSlot && Equiped[Weapons[i].id]) {
@@ -62,18 +84,31 @@ public class WeaponHolder : MonoBehaviour
 
             for (int i=0;  i < Weapons.Count ;++i) Weapons[i].gameObject.SetActive(false);
             Weapons[ActiveWeapon].gameObject.SetActive(true);
-
+            leftHandPoint = Weapons[ActiveWeapon].leftHandPoint;
+            rightHandPoint = Weapons[ActiveWeapon].rightHandPoint;
         }
+
+        //Ray ScreenVector = Cam.ScreenPointToRay(new Vector3(Screen.width *0.5f, Screen.height*0.5f,0.0f));
+        Ray ScreenVector = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+        Physics.Raycast(ScreenVector,out hit);
+        Physics.Raycast(Weapons[ActiveWeapon].BarrelEnd.position, (hit.point- Weapons[ActiveWeapon].BarrelEnd.position), out RayCast);
+
+        Debug.DrawRay(Cam.transform.position, ScreenVector.direction*10f,Color.yellow,0.0f,true);
+        Debug.DrawRay(RayCast.point,RayCast.normal, Color.red);
         //ActiveWeapon = 
 
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0) || Input.GetMouseButtonUp(0)) {
+        //if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0) || Input.GetMouseButtonUp(0)) {
+        if (shootStates[0] || shootStates[1] || shootStates[2]) {
             //Weapons[ActiveWeapon].TryShoot(Input.GetMouseButtonDown(0), Input.GetMouseButton(0), Input.GetMouseButtonUp(0));
             if (Ammo[Weapons[ActiveWeapon].id] > 0)
             {
-                bool shot = Weapons[ActiveWeapon].TryShoot(Input.GetMouseButtonDown(0), Input.GetMouseButton(0), Input.GetMouseButtonUp(0));
+                bool shot = Weapons[ActiveWeapon].TryShoot(shootStates[0], shootStates[1], shootStates[2]);
                 if (shot) Ammo[Weapons[ActiveWeapon].id]--;
             }
         }
+
+        receivedWeaponChange = false; // new
 
     }
 }

@@ -41,6 +41,8 @@ public class Weapon : MonoBehaviour
     private int ShotsInARow = 0;
 
     public Transform BarrelEnd;
+    public Transform leftHandPoint;
+    public Transform rightHandPoint;
     public enum states { idle, triggerpress, firing, empty, reloading };
 
     public Weapon() {

@@ -13,7 +13,8 @@ public class RocketImpact : MonoBehaviour
         for (int i = 0; i < coll.Length; ++i) {
             coll[i].SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
         }
-        Invoke("Destr",1.0f);
+        //Invoke("Destr",1.0f);
+
     }
 
     // Update is called once per frame
@@ -21,10 +22,11 @@ public class RocketImpact : MonoBehaviour
     {
 
     }
-
+    /*
     private void Destr()
     {
         Destroy(this.gameObject);
     }
+    */
 
 }

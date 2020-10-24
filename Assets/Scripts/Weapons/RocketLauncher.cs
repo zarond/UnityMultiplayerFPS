@@ -15,7 +15,7 @@ public class RocketLauncher : Weapon
         //maxAmmo = 10;
         TransferVelocity = true;
         lifeDuration = 30.0f;
-        speed = 20.0f;
+        speed = 50.0f;
         //bulletPrefab = (GameObject)Resources.Load("/Prefabs/bullet.prefab");
         TimeToPressTrigger = 0.0f; //0.1f;
         slot = 2;
