@@ -16,11 +16,11 @@ public class SimpleRespawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            GameObject pl = GameObject.FindWithTag("Player");
-            Destroy(pl);
-            Instantiate(PlayerPrefab,Origin.position,Origin.rotation);
 
-        }
+    }
+
+    public void Respawn(GameObject pl) {
+        Destroy(pl);
+        Instantiate(PlayerPrefab, Origin.position, Origin.rotation); // надо сделать чтобы оно могло респавнить не только игрока
     }
 }

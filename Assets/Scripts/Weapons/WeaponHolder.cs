@@ -23,10 +23,12 @@ public class WeaponHolder : MonoBehaviour
     public Transform WeaponHolderObject;
     public Transform ChestBone;
     RaycastHit RayCast;
-    [SerializeField]
-    Camera Cam;
+    //[SerializeField]
+    //Camera Cam;
     [HideInInspector]
     public bool[] shootStates = new bool[3];
+
+    Vector3 originalPosWeapon;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +52,7 @@ public class WeaponHolder : MonoBehaviour
         Weapons[0].gameObject.SetActive(true);
         leftHandPoint = Weapons[0].leftHandPoint;
         rightHandPoint = Weapons[0].rightHandPoint;
+        originalPosWeapon = WeaponHolderObject.localPosition;
     }
 
     // Update is called once per frame
@@ -58,6 +61,9 @@ public class WeaponHolder : MonoBehaviour
         if (WeaponPosCorrection) {
            //WeaponHolderObject.position = transform.TransformVector(transform.localRotation * (0.6f * Vector3.forward))+ChestBone.position;
             WeaponHolderObject.position = transform.forward*0.5f + ChestBone.position+transform.right*0.2f;
+        }
+        else {
+            WeaponHolderObject.localPosition = originalPosWeapon;
         }
         /*
         receivedWeaponChange = true;
@@ -89,12 +95,13 @@ public class WeaponHolder : MonoBehaviour
         }
 
         //Ray ScreenVector = Cam.ScreenPointToRay(new Vector3(Screen.width *0.5f, Screen.height*0.5f,0.0f));
+        int layer = ~(1 << 9); // маска слоя все кроме физического коллайдера персонажей
         Ray ScreenVector = new Ray(transform.position, transform.forward);
         RaycastHit hit;
-        Physics.Raycast(ScreenVector,out hit);
-        Physics.Raycast(Weapons[ActiveWeapon].BarrelEnd.position, (hit.point- Weapons[ActiveWeapon].BarrelEnd.position), out RayCast);
+        Physics.Raycast(ScreenVector,out hit, Mathf.Infinity, layer);
+        Physics.Raycast(Weapons[ActiveWeapon].BarrelEnd.position, (hit.point- Weapons[ActiveWeapon].BarrelEnd.position), out RayCast, Mathf.Infinity, layer);
 
-        Debug.DrawRay(Cam.transform.position, ScreenVector.direction*10f,Color.yellow,0.0f,true);
+        Debug.DrawRay(/*Cam.*/transform.position, ScreenVector.direction*10f,Color.yellow,0.0f,true);
         Debug.DrawRay(RayCast.point,RayCast.normal, Color.red);
         //ActiveWeapon = 
 

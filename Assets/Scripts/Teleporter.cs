@@ -19,7 +19,7 @@ public class Teleporter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && (transform.InverseTransformVector(other.attachedRigidbody.velocity).y<=0.01f)) {
+        if ((other.CompareTag("Player") || other.CompareTag("Character")) && (transform.InverseTransformVector(other.attachedRigidbody.velocity).y<=0.01f)) {
             Debug.Log("Teleport");
             other.transform.position = Destination.transform.position;
             //Quaternion Rotation = Destination.transform.rotation * Quaternion.Inverse(transform.rotation);

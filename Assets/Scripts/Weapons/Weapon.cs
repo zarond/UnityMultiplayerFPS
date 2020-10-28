@@ -44,6 +44,7 @@ public class Weapon : MonoBehaviour
     public Transform leftHandPoint;
     public Transform rightHandPoint;
     public enum states { idle, triggerpress, firing, empty, reloading };
+    public GameObject owner;
 
     public Weapon() {
         //timer = -TimeToPressTrigger;

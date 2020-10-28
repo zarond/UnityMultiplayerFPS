@@ -6,6 +6,7 @@ using UnityEngine;
 public class RocketLauncher : Weapon
 {
     public GameObject refer;
+    //public bool canhurtplayer = false;
 
     public RocketLauncher() {
         id = 1;
@@ -29,6 +30,7 @@ public class RocketLauncher : Weapon
     override public void Shoot() {
         Debug.Log("Shot with RocketLauncher");
         GameObject temp = Instantiate(bulletPrefab, BarrelEnd.position, BarrelEnd.rotation);
+        temp.GetComponent<RocketLifeCycle>().owner = this.owner; // задать принадлежность снаряда
         Vector3 tempvelocity = Vector3.zero;
         if (TransferVelocity) tempvelocity = GameObject.FindWithTag("Player").GetComponent<Rigidbody>().velocity;
         temp.GetComponent<Rigidbody>().velocity = speed * temp.transform.forward + tempvelocity;

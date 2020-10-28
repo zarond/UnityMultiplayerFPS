@@ -15,6 +15,10 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(this.gameObject);
+        }
 
         movement.MouseInput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 

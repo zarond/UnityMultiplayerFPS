@@ -29,6 +29,8 @@ public class rig_animator : MonoBehaviour
         side = Mathf.Lerp(side, controller.transform.InverseTransformVector(controller.Character.velocity).x, 7f * Time.deltaTime);
         anim.SetFloat("forward", forward);
         anim.SetFloat("side", side);
+        anim.SetBool("isGrounded", controller.isGrounded);
+        anim.SetBool("jump", controller.jump); 
     }
 
     void OnAnimatorIK(int layerIndex)
