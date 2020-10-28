@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Teleport
   - PickUp
+  - Character
   layers:
   - Default
   - TransparentFX
@@ -16,9 +17,9 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
-  - 
-  - 
+  - CharacterPhysicsCollider
+  - CharacterTriggerCollider
+  - BulletColliders
   - 
   - 
   - 
