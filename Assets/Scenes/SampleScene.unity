@@ -984,6 +984,50 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 17.881174, y: 26.336025, z: 21.01323}
   m_Center: {x: -0.18460974, y: 163.70465, z: -0.7923476}
+--- !u!1 &798202019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 798202020}
+  - component: {fileID: 798202021}
+  m_Layer: 0
+  m_Name: Global
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &798202020
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798202019}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.685065, y: 9.054726, z: -63.247513}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 18
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &798202021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798202019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f259e684972ee4a81b89cc4fb7169faa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  friendlyfire: 0
 --- !u!1 &1140568546
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,6 +1298,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamid: 0
+  playerid: 0
+  gameMode: {fileID: 0}
   hp: 5
   DmgNumbers: 1
 --- !u!65 &1530645756
@@ -1885,6 +1931,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8671413108965537530, guid: 5bff6b1d36a224a389520d15a376addc,
+        type: 3}
+      propertyPath: gameMode
+      value: 
+      objectReference: {fileID: 798202021}
     - target: {fileID: 8671413110871418859, guid: 5bff6b1d36a224a389520d15a376addc,
         type: 3}
       propertyPath: m_Name

@@ -6,13 +6,16 @@ using UnityEngine;
 public class health : MonoBehaviour
 {
     public int teamid = 0;
+    public int playerid = 0;
+    public GameMode gameMode=null;
 
     public float hp;
     public bool DmgNumbers = true;
 
+
     void Start()
     {
-        
+        gameMode = GameObject.Find("Global").GetComponent<GameMode>();
     }
 
     // Update is called once per frame
@@ -40,5 +43,10 @@ public class health : MonoBehaviour
             //ui = tmp.AddComponent<>();
             //ui. = "Whatever";
         }
+
+        if (hp <= 0) {
+            if (gameMode!=null)
+            gameMode.RegisterKill(whoDamaged.GetComponent<health>().playerid, this.playerid);
+        };
     }
 }
