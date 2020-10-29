@@ -80,7 +80,7 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
     {
         if (transform.up != Vector3.up) {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.ProjectOnPlane(Cam.forward, Vector3.up),Vector3.up),1);
-            Debug.Log("Restoring balance");
+            //Debug.Log("Restoring balance");
         }
     }
 

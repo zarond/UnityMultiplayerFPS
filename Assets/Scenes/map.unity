@@ -107,15 +107,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.32
+    agentRadius: 0.6
     agentHeight: 2
     agentSlope: 45
     agentClimb: 0.4
     ledgeDropHeight: 6.35
-    maxJumpAcrossDistance: 3.75
+    maxJumpAcrossDistance: 4.96
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.10666666
+    cellSize: 0.2
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 0}
-  weapon: {fileID: 0}
+  weapon: {fileID: 8885561643317197411}
 --- !u!1 &571277500 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1114700779378316447, guid: 36533357b56fa442b990a1508ab123d1,
@@ -636,6 +636,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 551770158498190127, guid: 0bf3862fee605401ab881af25141ba44,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2052893054206051780, guid: 0bf3862fee605401ab881af25141ba44,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521576935498025539, guid: 0bf3862fee605401ab881af25141ba44,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 6415346426065550140, guid: 0bf3862fee605401ab881af25141ba44,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -701,6 +716,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: respawn
+      objectReference: {fileID: 0}
+    - target: {fileID: 8024493477203249455, guid: 0bf3862fee605401ab881af25141ba44,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0bf3862fee605401ab881af25141ba44, type: 3}
@@ -7095,7 +7115,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8671413110225066456}
   m_LocalRotation: {x: -0, y: -0.87457746, z: 0, w: -0.48488572}
-  m_LocalPosition: {x: -4.24, y: 0.7, z: -0.77}
+  m_LocalPosition: {x: -6.99, y: 0.7, z: -75.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8671413109376207048}
@@ -7571,7 +7591,7 @@ MonoBehaviour:
   - {fileID: 8671413109097573505}
   - {fileID: 8671413110657721624}
   Equiped: 01010000000000000000
-  Ammo: 0a0000000a0000000000000000000000000000000000000000000000000000000000000000000000
+  Ammo: 050000000a0000000000000000000000000000000000000000000000000000000000000000000000
   maxAmmo: 14000000140000000000000000000000000000000000000000000000000000000000000000000000
   ActiveSlot: 0
   receivedWeaponChange: 0

@@ -17,7 +17,7 @@ public class InputController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(this.gameObject);
+        //    GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(this.gameObject);
         }
 
         movement.MouseInput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
@@ -48,4 +48,9 @@ public class InputController : MonoBehaviour
         movement.spd = (Input.GetKey(KeyCode.LeftShift)) ? movement.RunSpeed : movement.speed;
 
     }
+
+    //private void OnDestroy()
+    //{
+    //    GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Invoke("Respawn(this.gameObject)",0.5f);// Respawn(this.gameObject);
+    //}
 }

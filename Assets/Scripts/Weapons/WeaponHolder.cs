@@ -10,7 +10,8 @@ public class WeaponHolder : MonoBehaviour
     public bool[] Equiped = new bool[Constants.GlobalNumberOfWeapons];
     public int[] Ammo = new int[Constants.GlobalNumberOfWeapons];
     public int[] maxAmmo = new int[Constants.GlobalNumberOfWeapons];
-    int ActiveWeapon = 0;
+    //[HideInInspector]
+    public int ActiveWeapon { get; private set; } = 0 ;
     [HideInInspector]
     public int ActiveSlot = 0;
     [HideInInspector]
