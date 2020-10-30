@@ -7,9 +7,10 @@ public class health : MonoBehaviour
 {
     public int teamid = 0;
     public int playerid = 0;
+    public string nick = "default";
     public GameMode gameMode=null;
 
-    public float hp;
+    public /*float*/int hp;
     public bool DmgNumbers = true;
 
 
@@ -27,18 +28,22 @@ public class health : MonoBehaviour
     //void DoDamage(float damage, GameObject whoDamaged = null)
     void DoDamage(object[] obj)
     {
-        float damage;
+        /*float*/int damage;
         GameObject whoDamaged=null;
         try {
-            damage = (float)obj.GetValue(0);
+            damage = (/*float*/int)obj.GetValue(0);
             whoDamaged = (GameObject)obj.GetValue(1);
         } catch { return; }
 
-        //if (teamid == whoDamaged.GetComponent<health>().teamid) return; //friendlyfire off, надо добавить настройку и ракетница все-таки должна дамажить себя
+        if (!gameMode.friendlyfire && whoDamaged.GetComponent<health>().teamid!=-1 && teamid == whoDamaged.GetComponent<health>().teamid) { 
+            if (this.gameObject != whoDamaged) return; 
+        } // обработка friendlyfire, но ракетница сама себя дамажит, а teamid=-1 значит что дамаг наносится всем
 
         hp -= damage;
         if (DmgNumbers) {
-            Debug.Log(this.name + " got damaged by "+damage+"hp, by "+whoDamaged+", "+hp+"hp left");
+            //Debug.Log(this.name + " got damaged by "+damage+"hp, by "+whoDamaged+", "+hp+"hp left"); // надо поменять названия объектов на ники 
+            Debug.Log(this.nick + " got damaged by " + damage + "hp, by " + whoDamaged.GetComponent<health>().nick + ", " + hp + "hp left");
+
             //GameObject tmp = new GameObject("DamageText");
             //ui = tmp.AddComponent<>();
             //ui. = "Whatever";

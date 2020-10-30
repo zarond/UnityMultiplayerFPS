@@ -27,7 +27,7 @@ public class RocketImpact : MonoBehaviour
         for (int i = 0; i < list.Count; ++i)
         {
             //list[i].SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
-            list[i].SendMessage("DoDamage", new object[2] { 1.0f, this.owner }, SendMessageOptions.DontRequireReceiver);
+            list[i].SendMessage("DoDamage", new object[2] { /*1.0f*/1, this.owner }, SendMessageOptions.DontRequireReceiver);
         }
         //Invoke("Destr",1.0f);
 

@@ -105,9 +105,10 @@ public class UI : MonoBehaviour
         }
         for (int i=0;i< scoreEntries.Count; ++i) {
             scoreEntries[i].transform.GetChild(0).GetComponent<Text>().text = (gameMode.ScoreTable[i].playerid).ToString();
-            scoreEntries[i].transform.GetChild(1).GetComponent<Text>().text = (gameMode.ScoreTable[i].score).ToString();
-            scoreEntries[i].transform.GetChild(2).GetComponent<Text>().text = (gameMode.ScoreTable[i].K).ToString();
-            scoreEntries[i].transform.GetChild(3).GetComponent<Text>().text = (gameMode.ScoreTable[i].D).ToString();
+            scoreEntries[i].transform.GetChild(1).GetComponent<Text>().text = gameMode.ScoreTable[i].nick;
+            scoreEntries[i].transform.GetChild(2).GetComponent<Text>().text = (gameMode.ScoreTable[i].score).ToString();
+            scoreEntries[i].transform.GetChild(3).GetComponent<Text>().text = (gameMode.ScoreTable[i].K).ToString();
+            scoreEntries[i].transform.GetChild(4).GetComponent<Text>().text = (gameMode.ScoreTable[i].D).ToString();
         }
 
     }

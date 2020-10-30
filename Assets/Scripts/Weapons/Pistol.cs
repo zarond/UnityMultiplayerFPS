@@ -64,7 +64,7 @@ public class Pistol : Weapon
                     if (hits[i].collider.gameObject.layer == 10)
                     {
                         //hits[i].collider.transform.root.SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
-                        hits[i].collider.transform.root.SendMessage("DoDamage", new object[2] {1.0f, this.owner}, SendMessageOptions.DontRequireReceiver);
+                        hits[i].collider.transform.root.SendMessage("DoDamage", new object[2] {/*1.0f*/1, this.owner}, SendMessageOptions.DontRequireReceiver);
                     }
                     break;
                 }

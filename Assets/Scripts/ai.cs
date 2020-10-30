@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
 
 public class ai : MonoBehaviour
 {
@@ -15,11 +17,16 @@ public class ai : MonoBehaviour
 
     public MovementRigidBody movement;
     public WeaponHolder weapon;
+    health hlth;
+
+    System.Random r = new System.Random();
+
     // Start is called before the first frame update
     void Start()
     {
-        ChoseCharacterTarget();
         movement = GetComponent<MovementRigidBody>();
+        hlth = GetComponent<health>();
+        ChoseCharacterTarget();
         //movement.input.Set(1.0f, 1.0f);
     }
 
@@ -32,7 +39,7 @@ public class ai : MonoBehaviour
     }
 
     void LookTo(Vector3 trgt) {
-        Vector3 vec = trgt - transform.position;
+        Vector3 vec = trgt - weapon.transform.position;
         vec = weapon.transform.InverseTransformVector(vec);
         Quaternion rot = Quaternion.LookRotation(vec, Vector3.up);
         rot = Quaternion.RotateTowards(Quaternion.identity, rot, 5);
@@ -46,7 +53,23 @@ public class ai : MonoBehaviour
     }
 
     void ChoseCharacterTarget() {
-        charactertarget = GameObject.FindWithTag("Player");
+        //charactertarget = GameObject.FindWithTag("Player");
+        //return;
+
+        GameObject tmp1 = GameObject.FindWithTag("Player");
+        GameObject[] tmp2 = GameObject.FindGameObjectsWithTag("Character");
+       //Debug.Log(tmp1 + " "+tmp2.Length);
+        tmp2 = tmp2.Append(tmp1).ToArray();
+        Debug.Log(tmp2.Length);
+        //for (int i = tmp2.Length - 1; i >= 0; --i) { 
+        //    if (tmp2[i] == this.gameObject || (tmp2[i].GetComponent<health>().teamid == this.hlth.teamid)) System.Array.FindAll()
+        //}
+        GameObject[] tmp3 = System.Array.FindAll(tmp2, x => (x != this.gameObject && (x.GetComponent<health>().teamid != this.hlth.teamid || this.hlth.teamid == -1)));
+        int n = r.Next(0,tmp3.Length);
+
+        Debug.Log(tmp3.Length +" "+ tmp3[n]);
+        if (tmp3.Length == 0) return;
+        charactertarget = tmp3[n];
     }
 
     void JumpOver()
@@ -85,8 +108,8 @@ public class ai : MonoBehaviour
                 if (Vector3.Distance(currentpath.corners[currentnode], transform.position) < 1.0f) currentnode += 1;
                 if (currentnode < currentpath.corners.Length)
                 {
-                    target = currentpath.corners[currentnode] + Vector3.up * 0.7f;
-                    looktarget = currentpath.corners[currentnode] + Vector3.up * 0.7f;
+                    target = currentpath.corners[currentnode] + Vector3.up * 1.6f;
+                    looktarget = currentpath.corners[currentnode] + Vector3.up * 1.6f;
                     Debug.DrawLine(transform.position,target);
                     if (movement.Character.velocity.sqrMagnitude < 0.05f) timerstuck+=Time.fixedDeltaTime;
                     if (timerstuck >= 1.0f) { currentpath = null; timerstuck = 0.0f; Debug.Log("been stuck"); }
@@ -112,9 +135,9 @@ public class ai : MonoBehaviour
     void LockOnAndShoot() {
         weapon.receivedWeaponChange = false;
         RaycastHit hit;
-        if (Physics.Raycast(transform.position,(charactertarget.transform.position- transform.position),out hit, 15f)) {
-            if (hit.collider.gameObject == charactertarget) {
-                looktarget = charactertarget.transform.position;
+        if (Physics.Raycast(weapon.transform.position,(charactertarget.transform.position + Vector3.up * 0.5f - weapon.transform.position),out hit, 15f, ~(1 << 9))) {
+            if (hit.collider.gameObject.layer == 10){//charactertarget) {
+                looktarget = charactertarget.transform.position+Vector3.up*0.5f;
                 timeshoot += Time.fixedDeltaTime;
                 if (timeshoot >= 3.0f)
                 {
@@ -130,11 +153,12 @@ public class ai : MonoBehaviour
                         weapon.ActiveSlot += 1;
                     }
                 }
-            }
+            } //else Debug.Log("hit missed");
 
         }
         else {
             timeshoot = 0.0f;
+            //Debug.Log("cant hit");
         }
     }
 
