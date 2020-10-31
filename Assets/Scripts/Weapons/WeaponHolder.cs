@@ -114,7 +114,7 @@ public class WeaponHolder : MonoBehaviour
                 bool shot = Weapons[ActiveWeapon].TryShoot(shootStates[0], shootStates[1], shootStates[2]);
                 if (shot) Ammo[Weapons[ActiveWeapon].id]--;
             }
-        }
+        } //по хорошему в отдельную функцию бы shootgun()
 
         receivedWeaponChange = false; // new
 
