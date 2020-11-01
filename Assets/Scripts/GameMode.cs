@@ -31,10 +31,23 @@ public class GameMode : MonoBehaviour
     {
         //AddNewPlayerToTable(0);
         //AddNewPlayerToTable(1);
-        RegisterNewPlayerAndSpawn(0, 0,"player");
-        RegisterNewPlayerAndSpawn(-1, 1,"enemy");
+
+        //RegisterNewPlayerAndSpawn(0, 0,"player");
+        //RegisterNewPlayerAndSpawn(-1, 1,"enemy");
+
         //RegisterNewPlayerAndSpawn(2, 1);
         //RegisterNewPlayerAndSpawn(3, 1);
+        //StartGame();
+    }
+
+    public void StartGame() {
+        Debug.Log("starting game");
+        RegisterNewPlayerAndSpawn(0, 0, "player");
+        RegisterNewPlayerAndSpawn(-1, 1, "enemy");
+        GetComponentInChildren<Camera>().enabled = false;
+        GetComponentInChildren<Canvas>().enabled = false;
+        for (int i = 0; i < gameObject.transform.childCount; ++i) { this.gameObject.transform.GetChild(i).gameObject.SetActive(false); }
+
     }
 
     // Update is called once per frame

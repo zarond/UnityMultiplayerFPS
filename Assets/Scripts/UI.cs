@@ -32,6 +32,8 @@ public class UI : MonoBehaviour
     public GameObject scoreEntryPrefab;
     public List<GameObject> scoreEntries = new List<GameObject>();
 
+    public bool dbguienabled = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,38 +42,62 @@ public class UI : MonoBehaviour
         cube_mov = cube.GetComponent<MovementRigidBody>();
         Health = this.GetComponentInParent<health>();
         gameMode = GameObject.Find("Global").GetComponent<GameMode>();
+        dbguisetenabled(dbguienabled);
     }
 
+    void dbguisetenabled(bool t) {
+        dbguienabled = t;
+        if (t) {
+            DbgMoveField.gameObject.SetActive(true);
+            DbgJ.gameObject.SetActive(true); ;
+            DbgJr.gameObject.SetActive(true); ;
+            DbgM.gameObject.SetActive(true); ;
+            DbgMr.gameObject.SetActive(true); ;
+        }
+        else {
+            GroundedIndicator.SetActive(false);
+            PauseMenu.SetActive(false);
+            DbgMoveField.gameObject.SetActive(false);
+            DbgJ.gameObject.SetActive(false); ;
+            DbgJr.gameObject.SetActive(false); ;
+            DbgM.gameObject.SetActive(false); ;
+            DbgMr.gameObject.SetActive(false); ;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        input.Set(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        rawinput.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        MoveField = cube_rigidbody.velocity / cube_mov.spd;
-        MoveField = cube.transform.InverseTransformVector(MoveField);
-        DbgMoveField.localPosition = 50 * new Vector2(MoveField.x, MoveField.z);
-        DbgJ.localPosition = 50 * input;
-        DbgJr.localPosition = 50 * rawinput;
+        if (dbguienabled) {
+            input.Set(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            rawinput.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            MoveField = cube_rigidbody.velocity / cube_mov.spd;
+            MoveField = cube.transform.InverseTransformVector(MoveField);
+            DbgMoveField.localPosition = 50 * new Vector2(MoveField.x, MoveField.z);
+            DbgJ.localPosition = 50 * input;
+            DbgJr.localPosition = 50 * rawinput;
 
-        minput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        mrawinput.Set(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+            minput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            mrawinput.Set(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-        DbgM.localPosition = 50 * minput;
-        DbgMr.localPosition = 50 * mrawinput;
+            DbgM.localPosition = 50 * minput;
+            DbgMr.localPosition = 50 * mrawinput;
 
-        if (!paused && Input.GetKeyDown("p"))
-        {
-            paused = true;
-            PauseMenu.SetActive(paused);
-            Time.timeScale = 0;
+            if (!paused && Input.GetKeyDown("p"))
+            {
+                paused = true;
+                PauseMenu.SetActive(paused);
+                Time.timeScale = 0;
+            }
+            else if (paused && Input.GetKeyDown("p"))
+            {
+                paused = false;
+                PauseMenu.SetActive(paused);
+                Time.timeScale = 1;
+            }
+
+            GroundedIndicator.SetActive(cube_mov.isGrounded);
         }
-        else if (paused && Input.GetKeyDown("p")) {
-            paused = false;
-            PauseMenu.SetActive(paused);
-            Time.timeScale = 1;
-        }
 
-        GroundedIndicator.SetActive(cube_mov.isGrounded);
 
 
         if (Health != null) {
