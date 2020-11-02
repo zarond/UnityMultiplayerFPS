@@ -44,6 +44,8 @@ public class GameMode : MonoBehaviour
         Debug.Log("starting game");
         RegisterNewPlayerAndSpawn(0, 0, "player");
         RegisterNewPlayerAndSpawn(-1, 1, "enemy");
+        RegisterNewPlayerAndSpawn(1, 1, "enemy1");
+        RegisterNewPlayerAndSpawn(2, 1, "enemy2");
         GetComponentInChildren<Camera>().enabled = false;
         GetComponentInChildren<Canvas>().enabled = false;
         for (int i = 0; i < gameObject.transform.childCount; ++i) { this.gameObject.transform.GetChild(i).gameObject.SetActive(false); }

@@ -5,31 +5,13 @@ using UnityEngine;
 public class PickUpSystem : MonoBehaviour
 {
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    void Awake()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("here");
         if (other.CompareTag("PickUp") && other.gameObject.GetComponent<PickUp>().PickUpCriteria(this)) {
             other.gameObject.GetComponent<PickUp>().PickUpObject(this);
+            //Debug.Log("there");
         }
     }
 
-
-    private void FixedUpdate()
-    {
-    }
 }

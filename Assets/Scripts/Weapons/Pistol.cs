@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+[RequireComponent(typeof(AudioSource))]
 public class Pistol : Weapon
 {
     public GameObject refer;
     Transform CamHandlerObject;
+    public AudioClip firesound;
+    AudioSource source;
     //public bool canhurtplayer = true;
 
     public Pistol() {
@@ -28,6 +31,7 @@ public class Pistol : Weapon
         bulletPrefab = refer;
        //CamHandlerObject = gameObject.GetComponentInParent<Transform>();
         CamHandlerObject = transform.parent.parent;
+        source = GetComponent<AudioSource>();
     }
 
     override public void Shoot() {
@@ -54,12 +58,14 @@ public class Pistol : Weapon
         RaycastHit[] hits = Physics.RaycastAll(ScreenVector, Mathf.Infinity, layer).OrderBy(h => h.distance).ToArray();
         GameObject flare = Instantiate(bulletPrefab, BarrelEnd.position, BarrelEnd.rotation);
         Debug.Log("Shot with Pistol");
+        source.PlayOneShot(firesound, 0.4f);
+
         if (hits != null)
         {
             for (int i = 0; i < hits.Length; ++i)
             {
                 Debug.Log(hits[i].collider);
-                if (hits[i].collider.transform.root.gameObject != this.owner) {
+                if (hits[i].collider.transform.root.gameObject != this.owner && hits[i].collider.gameObject.layer!=2) {
                     Instantiate(bulletPrefab, hits[i].point, Quaternion.LookRotation(hits[i].normal));
                     if (hits[i].collider.gameObject.layer == 10)
                     {

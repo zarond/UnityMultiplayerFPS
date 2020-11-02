@@ -26,6 +26,8 @@ public class UI : MonoBehaviour
 
     private health Health;
     public Text Health_text;
+    public Text Ammo_text;
+    private WeaponHolder weapons;
 
     public GameObject Score;
     public GameMode gameMode;
@@ -41,6 +43,7 @@ public class UI : MonoBehaviour
         cube_rigidbody = cube.GetComponent<Rigidbody>();
         cube_mov = cube.GetComponent<MovementRigidBody>();
         Health = this.GetComponentInParent<health>();
+        weapons = this.transform.parent.GetComponentInChildren<WeaponHolder>();
         gameMode = GameObject.Find("Global").GetComponent<GameMode>();
         dbguisetenabled(dbguienabled);
     }
@@ -102,6 +105,10 @@ public class UI : MonoBehaviour
 
         if (Health != null) {
             Health_text.text = "Health: " + (Health.hp).ToString();
+        }
+        if (weapons != null)
+        {
+            Ammo_text.text = "Ammo: " + (weapons.Ammo[weapons.Weapons[weapons.ActiveWeapon].id]).ToString();
         }
 
         if (gameMode != null) {

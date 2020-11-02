@@ -11,12 +11,16 @@ public class health : MonoBehaviour
     public GameMode gameMode=null;
 
     public /*float*/int hp;
+    public /*float*/int maxhp=10;
     public bool DmgNumbers = true;
 
+    private Animator an;
 
     void Start()
     {
         gameMode = GameObject.Find("Global").GetComponent<GameMode>();
+        an = GetComponentInChildren<Animator>();
+        //maxhp = 11;
     }
 
     // Update is called once per frame
@@ -53,5 +57,15 @@ public class health : MonoBehaviour
             if (gameMode!=null)
             gameMode.RegisterKill(whoDamaged.GetComponent<health>().playerid, this.playerid);
         };
+
+        an.SetTrigger("hit");
+    }
+
+    public void Heal(int hlth)
+    {
+        if (hp > 0) {
+            hp += hlth;
+            if (hp > maxhp) hp = maxhp;
+        }
     }
 }

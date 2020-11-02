@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 [System.Serializable]
 public class RocketLauncher : Weapon
 {
     public GameObject refer;
+    public AudioClip firesound;
+    AudioSource source;
     //public bool canhurtplayer = false;
 
     public RocketLauncher() {
@@ -25,10 +28,12 @@ public class RocketLauncher : Weapon
     void Start()
     {
         bulletPrefab = refer;
+        source = GetComponent<AudioSource>();
     }
 
     override public void Shoot() {
         Debug.Log("Shot with RocketLauncher");
+        source.PlayOneShot(firesound, 0.4f);
         GameObject temp = Instantiate(bulletPrefab, BarrelEnd.position, BarrelEnd.rotation);
         temp.GetComponent<RocketLifeCycle>().owner = this.owner; // задать принадлежность снаряда
         Vector3 tempvelocity = Vector3.zero;
