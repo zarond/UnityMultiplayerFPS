@@ -29,13 +29,15 @@ public class RocketLauncher : Weapon
     {
         bulletPrefab = refer;
         source = GetComponent<AudioSource>();
+        ownerid = this.owner.GetComponent<health>().playerid;
     }
 
     override public void Shoot() {
         Debug.Log("Shot with RocketLauncher");
         source.PlayOneShot(firesound, 0.4f);
         GameObject temp = Instantiate(bulletPrefab, BarrelEnd.position, BarrelEnd.rotation);
-        temp.GetComponent<RocketLifeCycle>().owner = this.owner; // задать принадлежность снаряда
+        temp.GetComponent<RocketLifeCycle>().owner = this.owner; // задать принадлежность снаряда, может быть ошибка при отложенном попадании
+        temp.GetComponent<RocketLifeCycle>().ownerid = this.ownerid; // задать принадлежность снаряда
         Vector3 tempvelocity = Vector3.zero;
         if (TransferVelocity) tempvelocity = GameObject.FindWithTag("Player").GetComponent<Rigidbody>().velocity;
         temp.GetComponent<Rigidbody>().velocity = speed * temp.transform.forward + tempvelocity;

@@ -5,7 +5,8 @@ using System.Linq;
 
 public class RocketImpact : MonoBehaviour
 {
-    public GameObject owner;
+    public GameObject owner; // надо убрать
+    public int ownerid;
     //public SphereCollider trigger;
     // Start is called before the first frame update
     void Start()
@@ -27,7 +28,8 @@ public class RocketImpact : MonoBehaviour
         for (int i = 0; i < list.Count; ++i)
         {
             //list[i].SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
-            list[i].SendMessage("DoDamage", new object[2] { /*1.0f*/1, this.owner }, SendMessageOptions.DontRequireReceiver);
+            //list[i].SendMessage("DoDamage", new object[2] { /*1.0f*/1, this.owner }, SendMessageOptions.DontRequireReceiver);
+            list[i].SendMessage("DoDamageById", new object[2] { /*1.0f*/1, ownerid }, SendMessageOptions.DontRequireReceiver);
         }
         //Invoke("Destr",1.0f);
 

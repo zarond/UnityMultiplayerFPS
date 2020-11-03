@@ -26,6 +26,9 @@ public class GameMode : MonoBehaviour
     // сюда идет таблица очков и настройки режима игры
     public bool friendlyfire = false;
     public List<Score> ScoreTable = new List<Score>();
+    public int SpawnNumberOfEnemies;
+
+    int counter = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,9 +46,11 @@ public class GameMode : MonoBehaviour
     public void StartGame() {
         Debug.Log("starting game");
         RegisterNewPlayerAndSpawn(0, 0, "player");
-        RegisterNewPlayerAndSpawn(-1, 1, "enemy");
-        RegisterNewPlayerAndSpawn(1, 1, "enemy1");
-        RegisterNewPlayerAndSpawn(2, 1, "enemy2");
+        //RegisterNewPlayerAndSpawn(-1, 1, "enemy");
+        //RegisterNewPlayerAndSpawn(1, 1, "enemy1");
+        //RegisterNewPlayerAndSpawn(2, 1, "enemy2");
+        for (int i = 0; i < SpawnNumberOfEnemies; ++i) { RegisterNewPlayerAndSpawn(i-1, 1, "enemy"+i.ToString()); }
+
         GetComponentInChildren<Camera>().enabled = false;
         GetComponentInChildren<Canvas>().enabled = false;
         for (int i = 0; i < gameObject.transform.childCount; ++i) { this.gameObject.transform.GetChild(i).gameObject.SetActive(false); }
@@ -64,7 +69,9 @@ public class GameMode : MonoBehaviour
     }
 
     public void RegisterNewPlayerAndSpawn(int team, int mode=0, string nick = "default") {
-        int playerid = ScoreTable.Count;
+        //int playerid = ScoreTable.Count; // не учитывает если игрок выйдет из игры и список игроков уменьшиться
+        int playerid = counter++;
+
         GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(null, mode, playerid, team, nick);
         AddNewPlayerToTable(playerid, team, nick);
         ScoreTable[playerid].isAlive = true;
@@ -76,10 +83,14 @@ public class GameMode : MonoBehaviour
     }
 
     public void RemovePlayer(int pl) {
-        int indx = 0;
-        for (; indx < ScoreTable.Count; ++indx) if (ScoreTable[indx].playerid == pl) break;
-        ScoreTable.RemoveAt(indx);
+        int indx = -1;
+        //for (; indx < ScoreTable.Count; ++indx) if (ScoreTable[indx].playerid == pl) break;
+        indx = ScoreTable.FindIndex(x => x.playerid == pl);
+        if (indx < ScoreTable.Count && indx >=0)
+            ScoreTable.RemoveAt(indx);
     }
+
+    public int findplayerindex(int pl) { return ScoreTable.FindIndex(x => x.playerid == pl); }
 
     public void RegisterKill(int player1, int player2) {
         int indx1 = 0;

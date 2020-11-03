@@ -9,6 +9,7 @@ public class RocketLifeCycle : MonoBehaviour
     public GameObject Impact;
     bool alreadyhit = false;
     public GameObject owner;
+    public int ownerid;
     //public bool canhurtplayer = true;
 
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class RocketLifeCycle : MonoBehaviour
     {
         col = GetComponent<SphereCollider>();
         rgbody = GetComponent<Rigidbody>();
+        Destroy(this.gameObject, 10f); // удалить объект если он не попал никуда в течении 10 секунд
     }
 
     // Update is called once per frame
@@ -30,7 +32,8 @@ public class RocketLifeCycle : MonoBehaviour
         {
             alreadyhit = true;
             GameObject tmp = Instantiate(Impact, transform.position, transform.rotation);
-            tmp.GetComponent<RocketImpact>().owner = this.owner; // задать принадлежность взрыва
+            tmp.GetComponent<RocketImpact>().owner = this.owner; // задать принадлежность взрыва, может быть ошибка при отложенном попадании
+            tmp.GetComponent<RocketImpact>().ownerid = this.ownerid; // задать принадлежность взрыва
             Debug.Log("Hit");
             Destroy(this.gameObject);
         }

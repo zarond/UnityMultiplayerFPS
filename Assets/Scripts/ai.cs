@@ -60,14 +60,14 @@ public class ai : MonoBehaviour
         GameObject[] tmp2 = GameObject.FindGameObjectsWithTag("Character");
        //Debug.Log(tmp1 + " "+tmp2.Length);
         tmp2 = tmp2.Append(tmp1).ToArray();
-        Debug.Log(tmp2.Length);
+        //Debug.Log(tmp2.Length);
         //for (int i = tmp2.Length - 1; i >= 0; --i) { 
         //    if (tmp2[i] == this.gameObject || (tmp2[i].GetComponent<health>().teamid == this.hlth.teamid)) System.Array.FindAll()
         //}
         GameObject[] tmp3 = System.Array.FindAll(tmp2, x => (x != this.gameObject && (x.GetComponent<health>().teamid != this.hlth.teamid || this.hlth.teamid == -1)));
         int n = r.Next(0,tmp3.Length);
 
-        Debug.Log(tmp3.Length +" "+ tmp3[n]);
+        //Debug.Log(tmp3.Length +" "+ tmp3[n]);
         if (tmp3.Length == 0) return;
         charactertarget = tmp3[n];
     }
@@ -75,7 +75,8 @@ public class ai : MonoBehaviour
     void JumpOver()
     {
         RaycastHit hit;
-        Physics.SphereCast(transform.TransformPoint(new Vector3(0, 2, 1f)), 0.35f, Vector3.down, out hit);
+        //Physics.SphereCast(transform.TransformPoint(new Vector3(0, 2, 1f)), 0.35f, Vector3.down, out hit); // потому что слишком дорогой
+        Physics.Raycast(transform.TransformPoint(new Vector3(0, 2, 1f)), Vector3.down, out hit);
         Debug.DrawRay(hit.point, hit.normal, Color.yellow);
         if (hit.distance > 3.0f) movement.jump = true;
     }

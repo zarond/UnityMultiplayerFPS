@@ -32,6 +32,7 @@ public class Pistol : Weapon
        //CamHandlerObject = gameObject.GetComponentInParent<Transform>();
         CamHandlerObject = transform.parent.parent;
         source = GetComponent<AudioSource>();
+        ownerid = this.owner.GetComponent<health>().playerid;
     }
 
     override public void Shoot() {
@@ -57,20 +58,21 @@ public class Pistol : Weapon
 
         RaycastHit[] hits = Physics.RaycastAll(ScreenVector, Mathf.Infinity, layer).OrderBy(h => h.distance).ToArray();
         GameObject flare = Instantiate(bulletPrefab, BarrelEnd.position, BarrelEnd.rotation);
-        Debug.Log("Shot with Pistol");
+        //Debug.Log("Shot with Pistol");
         source.PlayOneShot(firesound, 0.4f);
 
         if (hits != null)
         {
             for (int i = 0; i < hits.Length; ++i)
             {
-                Debug.Log(hits[i].collider);
+                //Debug.Log(hits[i].collider);
                 if (hits[i].collider.transform.root.gameObject != this.owner && hits[i].collider.gameObject.layer!=2) {
                     Instantiate(bulletPrefab, hits[i].point, Quaternion.LookRotation(hits[i].normal));
                     if (hits[i].collider.gameObject.layer == 10)
                     {
                         //hits[i].collider.transform.root.SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
-                        hits[i].collider.transform.root.SendMessage("DoDamage", new object[2] {/*1.0f*/1, this.owner}, SendMessageOptions.DontRequireReceiver);
+                        //hits[i].collider.transform.root.SendMessage("DoDamage", new object[2] {/*1.0f*/1, this.owner}, SendMessageOptions.DontRequireReceiver);
+                        hits[i].collider.transform.root.SendMessage("DoDamageById", new object[2] {/*1.0f*/1, ownerid }, SendMessageOptions.DontRequireReceiver);
                     }
                     break;
                 }

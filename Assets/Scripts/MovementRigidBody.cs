@@ -84,11 +84,12 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
         }
     }
 
+    /*
     void WalkOver() {
         RaycastHit hit;
         Physics.SphereCast(transform.TransformPoint(new Vector3(0,2,1)), 0.35f, Vector3.down, out hit);
         Debug.DrawRay(hit.point, hit.normal,Color.yellow);
-    }
+    }*/
 
     private void OnCollisionStay(Collision collision)
     {
@@ -121,6 +122,7 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 
         //isGrounded = true;
 
+        /*     //слишком дорого и не используется
         RaycastHit hit;
         Physics.SphereCast(transform.position+Vector3.up * 0.1f, 0.35f, Vector3.down, out hit);
         //Physics.CapsuleCast(transform.position, transform.position, 0.3f, Vector3.down, out hit);
@@ -128,7 +130,7 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
         Debug.DrawRay(hit.point, hit.normal);
         Correction = Quaternion.FromToRotation(Vector3.up, hit.normal);
         //Quaternion Correction = Quaternion.FromToRotation(Vector3.up, (Vector3.Angle(Vector3.up, hit.normal)<=Character.slopeLimit)? hit.normal: (Vector3.up * Mathf.Cos(Character.slopeLimit) + Mathf.Sin(Character.slopeLimit) * (-Vector3.Dot(Vector3.up,hit.normal) * Vector3.up + hit.normal).normalized));
-
+        */
 
         //isGrounded = (hit.distance <= 0.36f+0.1f);
         /*

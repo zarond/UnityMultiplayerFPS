@@ -61,6 +61,44 @@ public class health : MonoBehaviour
         an.SetTrigger("hit");
     }
 
+    void DoDamageById(object[] obj) // в DoDamage возможны ситуации когда используется ссылка на уничтоженный gameobject стрелявшего, надо передавать playerid
+    {
+        /*float*/
+        int damage;
+        int whoDamaged;
+        try
+        {
+            damage = (/*float*/int)obj.GetValue(0);
+            whoDamaged = (int)obj.GetValue(1);
+        }
+        catch { return; }
+        int indx = gameMode.findplayerindex(whoDamaged);
+
+        if (!gameMode.friendlyfire && gameMode.ScoreTable[indx].team != -1 && teamid == gameMode.ScoreTable[indx].team)
+        {
+            if (this.playerid != whoDamaged) return;
+        } // обработка friendlyfire, но ракетница сама себя дамажит, а teamid=-1 значит что дамаг наносится всем
+
+        hp -= damage;
+        if (DmgNumbers)
+        {
+            //Debug.Log(this.name + " got damaged by "+damage+"hp, by "+whoDamaged+", "+hp+"hp left"); // надо поменять названия объектов на ники 
+            Debug.Log(this.nick + " got damaged by " + damage + "hp, by " + gameMode.ScoreTable[indx].nick + ", " + hp + "hp left");
+
+            //GameObject tmp = new GameObject("DamageText");
+            //ui = tmp.AddComponent<>();
+            //ui. = "Whatever";
+        }
+
+        if (hp <= 0)
+        {
+            if (gameMode != null)
+                gameMode.RegisterKill(whoDamaged, this.playerid);
+        };
+
+        an.SetTrigger("hit");
+    }
+
     public void Heal(int hlth)
     {
         if (hp > 0) {
