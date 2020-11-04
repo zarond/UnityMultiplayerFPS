@@ -83,7 +83,8 @@ public class health : MonoBehaviour
         if (DmgNumbers)
         {
             //Debug.Log(this.name + " got damaged by "+damage+"hp, by "+whoDamaged+", "+hp+"hp left"); // надо поменять названия объектов на ники 
-            Debug.Log(this.nick + " got damaged by " + damage + "hp, by " + gameMode.ScoreTable[indx].nick + ", " + hp + "hp left");
+
+            //Debug.Log(this.nick + " got damaged by " + damage + "hp, by " + gameMode.ScoreTable[indx].nick + ", " + hp + "hp left");
 
             //GameObject tmp = new GameObject("DamageText");
             //ui = tmp.AddComponent<>();

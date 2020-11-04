@@ -289,8 +289,12 @@ MonoBehaviour:
   leftHandPoint: {fileID: 5032166845942233911}
   rightHandPoint: {fileID: 6903047088282996924}
   owner: {fileID: 0}
-  refer: {fileID: 5493485996263999634, guid: 18cc6a584b652497f8e20387690f2c0a, type: 3}
+  ownerid: 0
   firesound: {fileID: 8300000, guid: 7bee4ee9114744d6facb229919cdc82c, type: 3}
+  flarePrefab: {fileID: 5493485996263999634, guid: 18cc6a584b652497f8e20387690f2c0a,
+    type: 3}
+  hitPrefab: {fileID: 7834714499241982050, guid: b858eb9706dce4129863a1b019ceb958,
+    type: 3}
 --- !u!1 &8598824199488709938
 GameObject:
   m_ObjectHideFlags: 0

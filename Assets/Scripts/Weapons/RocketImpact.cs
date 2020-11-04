@@ -11,7 +11,7 @@ public class RocketImpact : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Boom");
+        //Debug.Log("Boom");
         int layer = (1 << 10) | (1<<12); // маска слоя триггера-хитбокса (чтобы не учитывать обычные объекты)
         Collider[] coll = Physics.OverlapSphere(transform.position, 3.0f, layer); //если на объекте 2 коллайднра, то он получает дамаг дважды, надо исправить
         //yourList = yourList.Distinct().ToList();

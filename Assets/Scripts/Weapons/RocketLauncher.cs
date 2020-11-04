@@ -33,7 +33,7 @@ public class RocketLauncher : Weapon
     }
 
     override public void Shoot() {
-        Debug.Log("Shot with RocketLauncher");
+        //Debug.Log("Shot with RocketLauncher");
         source.PlayOneShot(firesound, 0.4f);
         GameObject temp = Instantiate(bulletPrefab, BarrelEnd.position, BarrelEnd.rotation);
         temp.GetComponent<RocketLifeCycle>().owner = this.owner; // задать принадлежность снаряда, может быть ошибка при отложенном попадании

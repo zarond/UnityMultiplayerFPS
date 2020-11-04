@@ -26,7 +26,11 @@ public class GameMode : MonoBehaviour
     // сюда идет таблица очков и настройки режима игры
     public bool friendlyfire = false;
     public List<Score> ScoreTable = new List<Score>();
+    public List<Vector3Int> KillTable = new List<Vector3Int>();
     public int SpawnNumberOfEnemies;
+
+    public event System.Action<int,int> OnKillRegistered;
+
 
     int counter = 0;
     // Start is called before the first frame update
@@ -110,5 +114,8 @@ public class GameMode : MonoBehaviour
             ScoreTable[indx2].D += 1;
             ScoreTable[indx2].isAlive = false;
         }
+        else { return; }
+        KillTable.Add(new Vector3Int(player1, player2, 0));
+        OnKillRegistered(player1,player2);
     }
 }

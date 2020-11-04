@@ -30,9 +30,13 @@ public class UI : MonoBehaviour
     private WeaponHolder weapons;
 
     public GameObject Score;
+    public GameObject KillTable;
     public GameMode gameMode;
     public GameObject scoreEntryPrefab;
+    public GameObject killEntryPrefab;
     public List<GameObject> scoreEntries = new List<GameObject>();
+    //public List<GameObject> KillEntries = new List<GameObject>();
+    public int maxKillEntries = 5;
 
     public bool dbguienabled = false;
 
@@ -46,6 +50,15 @@ public class UI : MonoBehaviour
         weapons = this.transform.parent.GetComponentInChildren<WeaponHolder>();
         gameMode = GameObject.Find("Global").GetComponent<GameMode>();
         dbguisetenabled(dbguienabled);
+
+        gameMode.OnKillRegistered += ShowKillMessage;
+
+        UpdateKillBoardUI();
+    }
+
+    private void OnDestroy()
+    {
+        gameMode.OnKillRegistered -= ShowKillMessage;
     }
 
     void dbguisetenabled(bool t) {
@@ -142,6 +155,54 @@ public class UI : MonoBehaviour
             scoreEntries[i].transform.GetChild(2).GetComponent<Text>().text = (gameMode.ScoreTable[i].score).ToString();
             scoreEntries[i].transform.GetChild(3).GetComponent<Text>().text = (gameMode.ScoreTable[i].K).ToString();
             scoreEntries[i].transform.GetChild(4).GetComponent<Text>().text = (gameMode.ScoreTable[i].D).ToString();
+        }
+
+    }
+
+    void ShowKillMessage(int player1, int player2) {
+        if (player1 == player2) { // mistakes were made
+        }
+        else { // x pwned by y
+        }
+        if (player1 == Health.playerid){ // show message in the center of the screen
+            transform.GetChild(7).gameObject.SetActive(true);
+            transform.GetChild(7).GetChild(0).GetComponent<Text>().text = "you killed " +
+            gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick;
+        } 
+        else if (player2 == Health.playerid) { // show message in the center of the screen
+            transform.GetChild(7).gameObject.SetActive(true);
+            transform.GetChild(7).GetChild(0).GetComponent<Text>().text = "pwned by " +
+            gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick;
+        }
+        UpdateKillBoardUI();
+        Debug.Log(gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick
+        + " pwned by " +gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick);
+    }
+
+    void UpdateKillBoardUI()
+    {
+        //int diff = gameMode.KillTable.Count;
+        int lim = (gameMode.KillTable.Count < maxKillEntries)? gameMode.KillTable.Count: maxKillEntries;
+        if (KillTable.transform.childCount < lim)
+        {
+            // добавить UI
+            for (int i = KillTable.transform.childCount; i < lim; ++i)
+            {
+                GameObject tmp = Instantiate(killEntryPrefab);
+                tmp.transform.SetParent(KillTable.transform, false);
+                tmp.transform.position.Set(0, 0, 0);
+                tmp.transform.Translate(30 * Vector3.down * i);
+            }
+        }
+        for (int i = 0; i < KillTable.transform.childCount; ++i)
+        {
+            int player1 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].x;
+            int player2 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].y;
+            KillTable.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = 
+            gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick + " pwned by "
+            //KillTable.transform.GetChild(i).GetChild(1).GetComponent<Text>().text = 
+            + gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick;
+
         }
 
     }

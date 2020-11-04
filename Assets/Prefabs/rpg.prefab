@@ -288,5 +288,6 @@ MonoBehaviour:
   leftHandPoint: {fileID: 68554522824142009}
   rightHandPoint: {fileID: 4298350906602396027}
   owner: {fileID: 0}
+  ownerid: 0
   refer: {fileID: 1156516600750903581, guid: 4a0ee87803d8c42b0a982cdb6c561264, type: 3}
-  firesound: {fileID: 8300000, guid: 6d0c105d2ae2f456e9186957ce9fb58f, type: 3}
+  firesound: {fileID: 8300000, guid: 2f80e65f05a0a4ea196f3339b63c07f6, type: 3}

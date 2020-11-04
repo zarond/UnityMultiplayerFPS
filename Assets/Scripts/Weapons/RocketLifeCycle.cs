@@ -34,7 +34,7 @@ public class RocketLifeCycle : MonoBehaviour
             GameObject tmp = Instantiate(Impact, transform.position, transform.rotation);
             tmp.GetComponent<RocketImpact>().owner = this.owner; // задать принадлежность взрыва, может быть ошибка при отложенном попадании
             tmp.GetComponent<RocketImpact>().ownerid = this.ownerid; // задать принадлежность взрыва
-            Debug.Log("Hit");
+            //Debug.Log("Hit");
             Destroy(this.gameObject);
         }
     }
@@ -42,10 +42,10 @@ public class RocketLifeCycle : MonoBehaviour
     // если попал прямо в персонажа, но не в себя
     private void OnTriggerEnter(Collider collider1)
     {
-        Debug.Log("On Trigger");
+        //Debug.Log("On Trigger");
         if (collider1.transform.root.gameObject!=owner && collider1.gameObject.layer == 10)
         {
-            Debug.Log("Hit directly");
+            //Debug.Log("Hit directly");
             OnCollisionEnter(new Collision());
         }
     }

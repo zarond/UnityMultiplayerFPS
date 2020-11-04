@@ -78,7 +78,7 @@ public class ai : MonoBehaviour
         //Physics.SphereCast(transform.TransformPoint(new Vector3(0, 2, 1f)), 0.35f, Vector3.down, out hit); // потому что слишком дорогой
         Physics.Raycast(transform.TransformPoint(new Vector3(0, 2, 1f)), Vector3.down, out hit);
         Debug.DrawRay(hit.point, hit.normal, Color.yellow);
-        if (hit.distance > 3.0f) movement.jump = true;
+        if (hit.distance > 4.0f) movement.jump = true;
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -113,7 +113,7 @@ public class ai : MonoBehaviour
                     looktarget = currentpath.corners[currentnode] + Vector3.up * 1.6f;
                     Debug.DrawLine(transform.position,target);
                     if (movement.Character.velocity.sqrMagnitude < 0.05f) timerstuck+=Time.fixedDeltaTime;
-                    if (timerstuck >= 1.0f) { currentpath = null; timerstuck = 0.0f; Debug.Log("been stuck"); }
+                    if (timerstuck >= 1.0f) { currentpath = null; timerstuck = 0.0f; Debug.LogWarning("been stuck"); }
                 }
             }
         }
@@ -128,7 +128,7 @@ public class ai : MonoBehaviour
         UnityEngine.AI.NavMesh.CalculatePath(transform.position, trgt, -1, path);
         //Debug.Log(path);
         //return path;
-        Debug.Log("finding path "+path.status);
+        Debug.LogWarning("finding path "+path.status);
         currentpath = path;
         currentnode = 0;
     }
