@@ -1605,6 +1605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyfire: 0
+  KillTable: []
   SpawnNumberOfEnemies: 4
 --- !u!4 &1736019712
 Transform:

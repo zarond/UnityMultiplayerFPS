@@ -9,7 +9,7 @@ public class ai : MonoBehaviour
     // здесь будет логика и управление бота
     Vector3 target;
     Vector3 looktarget;
-    GameObject charactertarget;
+    GameObject charactertarget=null;
     UnityEngine.AI.NavMeshPath currentpath = null;
     int currentnode=0;
     float timerstuck = 0.0f;
@@ -64,11 +64,12 @@ public class ai : MonoBehaviour
         //for (int i = tmp2.Length - 1; i >= 0; --i) { 
         //    if (tmp2[i] == this.gameObject || (tmp2[i].GetComponent<health>().teamid == this.hlth.teamid)) System.Array.FindAll()
         //}
-        GameObject[] tmp3 = System.Array.FindAll(tmp2, x => (x != this.gameObject && (x.GetComponent<health>().teamid != this.hlth.teamid || this.hlth.teamid == -1)));
+        if (tmp2.Length == 0) { charactertarget = null; return; }
+        GameObject[] tmp3 = System.Array.FindAll(tmp2, x => (x !=null && x != this.gameObject && (x.GetComponent<health>().teamid != this.hlth.teamid || this.hlth.teamid == -1)));
         int n = r.Next(0,tmp3.Length);
 
         //Debug.Log(tmp3.Length +" "+ tmp3[n]);
-        if (tmp3.Length == 0) return;
+        if (tmp3.Length == 0) { charactertarget = null; return; }
         charactertarget = tmp3[n];
     }
 
@@ -124,12 +125,14 @@ public class ai : MonoBehaviour
     }
 
     void FindPathtoTarget(Vector3 trgt) {
-        UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
-        UnityEngine.AI.NavMesh.CalculatePath(transform.position, trgt, -1, path);
+        //UnityEngine.AI.NavMeshPath path = new UnityEngine.AI.NavMeshPath();
+        //UnityEngine.AI.NavMesh.CalculatePath(transform.position, trgt, -1, path);
         //Debug.Log(path);
         //return path;
-        Debug.LogWarning("finding path "+path.status);
-        currentpath = path;
+        currentpath = new UnityEngine.AI.NavMeshPath();
+        UnityEngine.AI.NavMesh.CalculatePath(transform.position, trgt, -1, currentpath);
+        Debug.LogWarning("finding path "+currentpath.status);
+        //currentpath = path;
         currentnode = 0;
     }
 

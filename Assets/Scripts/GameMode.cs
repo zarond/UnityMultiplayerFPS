@@ -26,16 +26,23 @@ public class GameMode : MonoBehaviour
     // сюда идет таблица очков и настройки режима игры
     public bool friendlyfire = false;
     public List<Score> ScoreTable = new List<Score>();
+    [HideInInspector]
     public List<Vector3Int> KillTable = new List<Vector3Int>();
     public int SpawnNumberOfEnemies;
 
     public event System.Action<int,int> OnKillRegistered;
 
+    System.Random r = new System.Random();
+    public SimpleRespawn[] respawns;// точки респавна не меняются в течении матча
+
+    public int thisclientid = -100; // id пользователя, которому принадлежит этот клиент. на каждом клиенте свое значение
 
     int counter = 0;
     // Start is called before the first frame update
     void Start()
     {
+        respawns = FindObjectsOfType<SimpleRespawn>();
+        thisclientid = 0; // для примера, надо назначать через интернет
         //AddNewPlayerToTable(0);
         //AddNewPlayerToTable(1);
 
@@ -49,7 +56,7 @@ public class GameMode : MonoBehaviour
 
     public void StartGame() {
         Debug.Log("starting game");
-        RegisterNewPlayerAndSpawn(0, 0, "player");
+        RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
         //RegisterNewPlayerAndSpawn(-1, 1, "enemy");
         //RegisterNewPlayerAndSpawn(1, 1, "enemy1");
         //RegisterNewPlayerAndSpawn(2, 1, "enemy2");
@@ -66,9 +73,10 @@ public class GameMode : MonoBehaviour
     {
         int indx = ScoreTable.FindIndex(x => x.isAlive == false);
         if (indx>=0 && indx< ScoreTable.Count) {
-            GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>()
-            .Respawn(null, (ScoreTable[indx].playerid==0)? 0:1 , ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
-            ScoreTable[indx].isAlive = true;
+            //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>()
+            //.Respawn(null, (ScoreTable[indx].playerid==0)? 0:1 , ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
+            respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx].playerid == thisclientid) ? 0 : 1, ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
+            ScoreTable[indx].isAlive = true; // данный респавн предполагает что игрок локальной машины имеет id = 0, неправильно  
         } // respawn characters
     }
 
@@ -76,7 +84,8 @@ public class GameMode : MonoBehaviour
         //int playerid = ScoreTable.Count; // не учитывает если игрок выйдет из игры и список игроков уменьшиться
         int playerid = counter++;
 
-        GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(null, mode, playerid, team, nick);
+        //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(null, mode, playerid, team, nick);
+        respawns[r.Next(0, respawns.Length)].Respawn(null, mode, playerid, team, nick);
         AddNewPlayerToTable(playerid, team, nick);
         ScoreTable[playerid].isAlive = true;
     }

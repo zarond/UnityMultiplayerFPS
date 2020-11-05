@@ -15,13 +15,14 @@ public class SimpleRespawn : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    /*
+    void Update() // неправильный подход
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Respawn(GameObject.FindWithTag("Player"),0,-1);
+            Respawn(GameObject.FindWithTag("Player"), 0, -1);
         }
-    }
+    }*/
 
     // playerid=-1 значит что respawn постарается унаследовать id от pl, любое другое значение - создается с таким id 
     // teamid=-2 - значит что respawn постарается унаследовать teamid от pl, teamid=-1 - будет для режима free4all
