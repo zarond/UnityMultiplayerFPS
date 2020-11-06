@@ -1219,13 +1219,13 @@ PrefabInstance:
         type: 3}
       propertyPath: PlayerPrefab
       value: 
-      objectReference: {fileID: 8671413110871418859, guid: b91626bf5f9d7405eae999e28ba293e0,
+      objectReference: {fileID: 8671413110871418859, guid: ac49009b3313c4c00a3658d366d05821,
         type: 3}
     - target: {fileID: 8024493477203249454, guid: 0bf3862fee605401ab881af25141ba44,
         type: 3}
       propertyPath: EnemyPrefab
       value: 
-      objectReference: {fileID: 1193536832895217975, guid: 1ec85080c8ba5444597df8e0775c59bd,
+      objectReference: {fileID: 8671413110871418859, guid: ac49009b3313c4c00a3658d366d05821,
         type: 3}
     - target: {fileID: 8024493477203249455, guid: 0bf3862fee605401ab881af25141ba44,
         type: 3}
