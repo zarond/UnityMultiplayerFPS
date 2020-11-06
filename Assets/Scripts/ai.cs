@@ -26,6 +26,7 @@ public class ai : MonoBehaviour
     {
         movement = GetComponent<MovementRigidBody>();
         hlth = GetComponent<health>();
+        weapon = GetComponentInChildren<WeaponHolder>();
         ChoseCharacterTarget();
         //movement.input.Set(1.0f, 1.0f);
     }

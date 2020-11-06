@@ -125,6 +125,7 @@ public class GameMode : MonoBehaviour
         }
         else { return; }
         KillTable.Add(new Vector3Int(player1, player2, 0));
+        if (OnKillRegistered == null) return;
         OnKillRegistered(player1,player2);
     }
 }

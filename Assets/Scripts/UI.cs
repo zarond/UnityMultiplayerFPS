@@ -31,7 +31,7 @@ public class UI : MonoBehaviour
 
     public GameObject Score;
     public GameObject KillTable;
-    public GameMode gameMode;
+    public GameMode gameMode = null;
     public GameObject scoreEntryPrefab;
     public GameObject killEntryPrefab;
     public List<GameObject> scoreEntries = new List<GameObject>();
@@ -58,6 +58,7 @@ public class UI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (gameMode == null) return;
         gameMode.OnKillRegistered -= ShowKillMessage;
     }
 
