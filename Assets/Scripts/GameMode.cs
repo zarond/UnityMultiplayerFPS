@@ -64,6 +64,7 @@ public class GameMode : MonoBehaviour
 
         GetComponentInChildren<Camera>().enabled = false;
         GetComponentInChildren<Canvas>().enabled = false;
+        GetComponentInChildren<UnityEngine.UI.Button>().enabled = false;
         for (int i = 0; i < gameObject.transform.childCount; ++i) { this.gameObject.transform.GetChild(i).gameObject.SetActive(false); }
 
     }

@@ -40,6 +40,9 @@ public class UI : MonoBehaviour
 
     public bool dbguienabled = false;
 
+    //-/ пока не работает
+    //-/ private UnityEngine.UI.Button exitButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +57,9 @@ public class UI : MonoBehaviour
         gameMode.OnKillRegistered += ShowKillMessage;
 
         UpdateKillBoardUI();
+
+        //-/exitButton = GameObject.Find("Global").GetComponentInChildren<UnityEngine.UI.Button>();
+        //-/exitButton.gameObject.SetActive(true);
     }
 
     private void OnDestroy()
@@ -127,7 +133,14 @@ public class UI : MonoBehaviour
 
         if (gameMode != null) {
             Score.SetActive(Input.GetKey(KeyCode.Tab));
-            if (Input.GetKey(KeyCode.Tab)) { UpdateScoreBoardUI(); }
+            if (Input.GetKey(KeyCode.Tab)) { 
+                UpdateScoreBoardUI();
+                //-/exitButton.gameObject.SetActive(true);
+            }
+            //else
+            //{
+            //-/    exitButton.gameObject.SetActive(false);
+            //}
         }
 
 
