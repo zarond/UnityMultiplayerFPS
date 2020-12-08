@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviourPun
 {
     [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
     public static GameObject LocalPlayerInstance;
+    public GameObject camHandler;
 
     void Awake()
     {
@@ -16,6 +17,10 @@ public class PlayerManager : MonoBehaviourPun
         if (photonView.IsMine)
         {
             PlayerManager.LocalPlayerInstance = this.gameObject;
+            //camHandler = GetChildWithName(this, "CameraHandler");
+            camHandler = this.transform.Find("CameraHandler").gameObject;
+            camHandler.SetActive(true);
+
         }
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
         DontDestroyOnLoad(this.gameObject);
