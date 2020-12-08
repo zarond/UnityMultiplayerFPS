@@ -15,6 +15,11 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            GameMode.Instance.LeaveRoom();
+        }
+
         if (Input.GetKeyDown(KeyCode.R)) // самоуничтожение на R
         {
             //    GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(this.gameObject);
@@ -49,6 +54,8 @@ public class InputController : MonoBehaviour
         movement.spd = (Input.GetKey(KeyCode.LeftShift)) ? movement.RunSpeed : movement.speed;
 
     }
+
+
 
     //private void OnDestroy()
     //{

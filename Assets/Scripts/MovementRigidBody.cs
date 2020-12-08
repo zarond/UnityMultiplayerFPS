@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 //using UnityEngine.Networking; //
 
+using Photon.Pun;
+using Photon.Realtime;
+
 [RequireComponent(typeof(Rigidbody))]
 
 public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
@@ -49,6 +52,9 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        photonView = GetComponent<PhotonView>();
+
         Character = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
         //Cam = Camera.main.transform;
@@ -59,6 +65,11 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 
     void SetLook()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
+
         //MouseInput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         Vector3 ToCam = Cam.forward;
 
@@ -108,8 +119,17 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
         SetLook();
     }
 
+
+
+    private PhotonView photonView;
+
     void FixedUpdate()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
+
         RestoreBalance();
 
         //WalkOver();

@@ -9,6 +9,8 @@ public class FPSMode : MonoBehaviour
     public SkinnedMeshRenderer[] thirdpersonrig;
     WeaponHolder weapon;
     Vector3 originaloffset;
+
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -330,49 +330,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 381119076}
   m_CullTransparentMesh: 0
---- !u!1 &500431270
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 500431271}
-  - component: {fileID: 500431272}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &500431271
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500431270}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 460.26947, y: 222.77933, z: -32.24301}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &500431272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500431270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bd5e3753d33f34489361d7e36849234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &571277500 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1114700779378316447, guid: 36533357b56fa442b990a1508ab123d1,
@@ -1624,9 +1581,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendlyfire: 0
   KillTable: []
-  SpawnNumberOfEnemies: 4
+  SpawnNumberOfEnemies: 0
   respawns: []
   thisclientid: -100
+  playerPrefab: {fileID: 8671413110871418859, guid: b91626bf5f9d7405eae999e28ba293e0,
+    type: 3}
 --- !u!4 &1736019712
 Transform:
   m_ObjectHideFlags: 0
@@ -1809,7 +1768,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 500431272}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: LeaveRoom
         m_Mode: 1

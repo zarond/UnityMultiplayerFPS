@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class rig_animator : MonoBehaviour
+using Photon.Pun;
+using Photon.Realtime;
+
+// Я так понимаю, тут управление и все такое
+public class rig_animator : MonoBehaviourPun
 {
+    private PhotonView photonView;
+
     public Animator anim;
     public MovementRigidBody controller;
     public WeaponHolder weaponHolder;
@@ -15,6 +21,8 @@ public class rig_animator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        photonView = GetComponent<PhotonView>();
+
         forward = 0.0f;
         side = 0.0f;
     }
@@ -22,19 +30,28 @@ public class rig_animator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if ( !photonView.IsMine && PhotonNetwork.IsConnected)
+        //{
+        //    return;
+        //}
         //anim.SetFloat("forward", 1.0f);
         //anim.SetFloat("side", 0.0f);
         //controller.transform.InverseTransformVector(controller.Character.velocity);
-        forward = Mathf.Lerp(forward, controller.transform.InverseTransformVector(controller.Character.velocity).z,7f*Time.deltaTime);
+
+        forward = Mathf.Lerp(forward, controller.transform.InverseTransformVector(controller.Character.velocity).z, 7f * Time.deltaTime);
         side = Mathf.Lerp(side, controller.transform.InverseTransformVector(controller.Character.velocity).x, 7f * Time.deltaTime);
         anim.SetFloat("forward", forward);
         anim.SetFloat("side", side);
         anim.SetBool("isGrounded", controller.isGrounded);
-        anim.SetBool("jump", controller.jump); 
+        anim.SetBool("jump", controller.jump);
     }
 
     void OnAnimatorIK(int layerIndex)
     {
+        //if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        //{
+        //    return;
+        //}
         anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);
         anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);
         anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);

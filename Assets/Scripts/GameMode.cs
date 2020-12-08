@@ -1,9 +1,83 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class GameMode : MonoBehaviour
+public class GameMode : MonoBehaviourPunCallbacks
 {
+    /// <summary>
+    /// То, что было в GameManager
+    /// </summary>
+
+    public static GameMode Instance;
+
+    #region Photon Callbacks
+
+    public override void OnPlayerEnteredRoom(Player other)
+    {
+        Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
+
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+
+
+            LoadArena();
+        }
+    }
+
+
+    public override void OnPlayerLeftRoom(Player other)
+    {
+        Debug.LogFormat("OnPlayerLeftRoom() {0}", other.NickName); // seen when other disconnects
+
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+
+
+            LoadArena();
+        }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel("Launcher");
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    void LoadArena()
+    {
+        /// PhotonNetwork.LoadLevel() should only be called if we are the MasterClient
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
+        }
+        Debug.LogFormat("PhotonNetwork : Loading map", PhotonNetwork.CurrentRoom.PlayerCount);
+        /// We use PhotonNetwork.LoadLevel() to load the level we want, we don't use Unity directly, 
+        /// because we want to rely on Photon to load this level on all connected clients in the room, 
+        /// since we've enabled PhotonNetwork.AutomaticallySyncScene for this Game.
+        PhotonNetwork.LoadLevel("map");
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Конец того, что было в GameManager
+    /// </summary>
+
+
     [HideInInspector]
     public class /*struct*/ Score {
         public int playerid;
@@ -38,11 +112,40 @@ public class GameMode : MonoBehaviour
     public int thisclientid = -100; // id пользователя, которому принадлежит этот клиент. на каждом клиенте свое значение
 
     int counter = 0;
+
+    void Awake()
+    {
+        StartGame();
+    }
     // Start is called before the first frame update
     void Start()
     {
+        Instance = this;
+
         respawns = FindObjectsOfType<SimpleRespawn>();
         thisclientid = 0; // для примера, надо назначать через интернет
+
+        if (playerPrefab == null)
+        {
+            Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+        }
+        else
+        {
+            
+            if (PlayerManager.LocalPlayerInstance == null)
+            {
+                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
+                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
+                RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+            }
+            else
+            {
+                Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+            }
+
+        }
+
         //AddNewPlayerToTable(0);
         //AddNewPlayerToTable(1);
 
@@ -54,20 +157,20 @@ public class GameMode : MonoBehaviour
         //StartGame();
     }
 
-    public void StartGame() {
-        Debug.Log("starting game");
-        RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
-        //RegisterNewPlayerAndSpawn(-1, 1, "enemy");
-        //RegisterNewPlayerAndSpawn(1, 1, "enemy1");
-        //RegisterNewPlayerAndSpawn(2, 1, "enemy2");
-        for (int i = 0; i < SpawnNumberOfEnemies; ++i) { RegisterNewPlayerAndSpawn(i-1, 1, "enemy"+i.ToString()); }
+    //public void StartGame() {
+    //    Debug.Log("starting game");
+    //    RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+    //    //RegisterNewPlayerAndSpawn(-1, 1, "enemy");
+    //    //RegisterNewPlayerAndSpawn(1, 1, "enemy1");
+    //    //RegisterNewPlayerAndSpawn(2, 1, "enemy2");
+    //    for (int i = 0; i < SpawnNumberOfEnemies; ++i) { RegisterNewPlayerAndSpawn(i-1, 1, "enemy"+i.ToString()); }
 
-        GetComponentInChildren<Camera>().enabled = false;
-        GetComponentInChildren<Canvas>().enabled = false;
-        GetComponentInChildren<UnityEngine.UI.Button>().enabled = false;
-        for (int i = 0; i < gameObject.transform.childCount; ++i) { this.gameObject.transform.GetChild(i).gameObject.SetActive(false); }
+    //    GetComponentInChildren<Camera>().enabled = false;
+    //    GetComponentInChildren<Canvas>().enabled = false;
+    //    GetComponentInChildren<UnityEngine.UI.Button>().enabled = false;
+    //    for (int i = 0; i < gameObject.transform.childCount; ++i) { this.gameObject.transform.GetChild(i).gameObject.SetActive(false); }
 
-    }
+    //}
 
     // Update is called once per frame
     void Update()
@@ -81,15 +184,15 @@ public class GameMode : MonoBehaviour
         } // respawn characters
     }
 
-    public void RegisterNewPlayerAndSpawn(int team, int mode=0, string nick = "default") {
-        //int playerid = ScoreTable.Count; // не учитывает если игрок выйдет из игры и список игроков уменьшиться
-        int playerid = counter++;
+    //public void RegisterNewPlayerAndSpawn(int team, int mode=0, string nick = "default") {
+    //    //int playerid = ScoreTable.Count; // не учитывает если игрок выйдет из игры и список игроков уменьшиться
+    //    int playerid = counter++;
 
-        //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(null, mode, playerid, team, nick);
-        respawns[r.Next(0, respawns.Length)].Respawn(null, mode, playerid, team, nick);
-        AddNewPlayerToTable(playerid, team, nick);
-        ScoreTable[playerid].isAlive = true;
-    }
+    //    //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(null, mode, playerid, team, nick);
+    //    respawns[r.Next(0, respawns.Length)].Respawn(null, mode, playerid, team, nick);
+    //    AddNewPlayerToTable(playerid, team, nick);
+    //    ScoreTable[playerid].isAlive = true;
+    //}
 
     public void AddNewPlayerToTable(int pl, int t=0, string nick = "default") {
         //Inventory inventoryItem = inventario.Find((x) => x.name == someString)
@@ -128,5 +231,39 @@ public class GameMode : MonoBehaviour
         KillTable.Add(new Vector3Int(player1, player2, 0));
         if (OnKillRegistered == null) return;
         OnKillRegistered(player1,player2);
+    }
+
+
+    /// -------------------------------------
+
+    [Tooltip("The prefab to use for representing the player")]
+    public GameObject playerPrefab;
+
+    public void StartGame()
+    {
+        Debug.Log("starting game");
+        // Debug.Log(playerPrefab.name); // "player"
+        //PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
+        //RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+
+        for (int i = 0; i < SpawnNumberOfEnemies; ++i) { RegisterNewPlayerAndSpawn(i - 1, 1, "enemy" + i.ToString()); }
+
+        // убирает интерфейс с подсказкой и всем таким
+        GetComponentInChildren<Camera>().enabled = false;
+        GetComponentInChildren<Canvas>().enabled = false;
+        GetComponentInChildren<UnityEngine.UI.Button>().enabled = false;
+        for (int i = 0; i < gameObject.transform.childCount; ++i) { this.gameObject.transform.GetChild(i).gameObject.SetActive(false); }
+
+    }
+
+    public void RegisterNewPlayerAndSpawn(int team, int mode = 0, string nick = "default")
+    {
+        //int playerid = ScoreTable.Count; // не учитывает если игрок выйдет из игры и список игроков уменьшится
+        int playerid = counter++;
+
+        //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(null, mode, playerid, team, nick);
+        //respawns[r.Next(0, respawns.Length)].Respawn(null, mode, playerid, team, nick);
+        AddNewPlayerToTable(playerid, team, nick);
+        ScoreTable[playerid].isAlive = true;
     }
 }
