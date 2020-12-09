@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 public class PickUpHealth : PickUp
 {
     //public float distance;
     //public int weaponid;
     public int hp;
 
-    //private void Start()
-    //{
-    //    GetComponent<SphereCollider>().
-    //}
+    private PhotonView photonView;
+
+    private void Start()
+    {
+        photonView = GetComponent<PhotonView>();
+    }
 
     override public void PickUpObject(PickUpSystem WhoPicked)
     {
@@ -23,7 +28,10 @@ public class PickUpHealth : PickUp
             //cmp.Ammo[weaponid] += numberofammo;
             cmp.Heal(hp);
             //WhoPicked.Global.PickUps.Remove(this);
-            Destroy(this.gameObject);
+            if (photonView.IsMine) //Destroy(this.gameObject);
+            {
+                PhotonNetwork.Destroy(this.gameObject); //Destroy(this.gameObject);
+            }
         }
         else
         {

@@ -33,11 +33,6 @@ public class PickUpAmmo : PickUp
             {
                 PhotonNetwork.Destroy(this.gameObject); //Destroy(this.gameObject);
             }
-            else
-            {
-                // Вызов мастер-клиента и просьба ему прибить pick up
-
-            }
         }
         else
         {
