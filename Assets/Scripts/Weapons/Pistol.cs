@@ -53,7 +53,7 @@ public class Pistol : Weapon
         //    return;
         //Ray ScreenVector = Camera.main.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0.0f));
 
-            int layer = ~(1 << 9); // маска слоя все кроме физического коллайдера персонажей и триггер-коллайдеров самого игрока
+        int layer = ~(1 << 9); // маска слоя все кроме физического коллайдера персонажей и триггер-коллайдеров самого игрока
         //if (!canhurtplayer) layer &= ~(1<<12); // и триггер-коллайдеров самого игрока
         Ray ScreenVector = new Ray(CamHandlerObject.position, CamHandlerObject.forward);
 
@@ -90,6 +90,7 @@ public class Pistol : Weapon
                         //hits[i].collider.transform.root.SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
                         //hits[i].collider.transform.root.SendMessage("DoDamage", new object[2] {/*1.0f*/1, this.owner}, SendMessageOptions.DontRequireReceiver);
                         GameObject target = hits[i].collider.transform.root.gameObject;
+                        Debug.Log(target.name);
                         //hits[i].collider.transform.root.SendMessage("DoDamageById", new object[2] {/*1.0f*/1, ownerid }, SendMessageOptions.DontRequireReceiver);
                         photonView.RPC("DoDamageById", RpcTarget.Others, new object[2] {1, ownerid });
                     }

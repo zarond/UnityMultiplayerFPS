@@ -121,7 +121,7 @@ public class UI : MonoBehaviour
             GroundedIndicator.SetActive(cube_mov.isGrounded);
         }
 
-
+    
 
         if (Health != null) {
             Health_text.text = "Health: " + (Health.hp).ToString();
