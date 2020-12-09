@@ -180,6 +180,17 @@ public class GameMode : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        if (PlayerManager.LocalPlayerInstance == null)
+        {
+            Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
+            // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+            GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
+            //respawns[0].Respawn(playerPrefab.gameObject);
+            RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+
+        }
+
+
         int indx = ScoreTable.FindIndex(x => x.isAlive == false);
         if (indx>=0 && indx< ScoreTable.Count) {
             //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>()

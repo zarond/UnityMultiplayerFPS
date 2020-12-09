@@ -12,6 +12,7 @@ public class health : MonoBehaviour, IPunObservable
     public int playerid = 0;
     public string nick = "default";
     //public GameMode gameMode = null; //GameMode.Instance; //null;
+    private PhotonView photonView;
 
     [Tooltip("The current Health of our player")]
     public /*float*/int hp;
@@ -38,6 +39,7 @@ public class health : MonoBehaviour, IPunObservable
 
     void Start()
     {
+        photonView = GetComponent<PhotonView>();
         //gameMode = GameMode.Instance; //Find("Global").GetComponent<GameMode>();
         //if (gameMode == null)
         //{
@@ -50,8 +52,19 @@ public class health : MonoBehaviour, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        if (hp <= 0) PhotonNetwork.Destroy (this.gameObject);
+        if (photonView.IsMine)
+        {
+            if (hp <= 0) PhotonNetwork.Destroy(this.gameObject);
+
+        }
+
     }
+
+    //void Killed()
+    //{
+        
+
+    //}
 
     //void DoDamage(float damage, GameObject whoDamaged = null)
     void DoDamage(object[] obj)
