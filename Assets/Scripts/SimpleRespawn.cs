@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 public class SimpleRespawn : MonoBehaviour
 {
     public GameObject PlayerPrefab;
@@ -30,7 +33,9 @@ public class SimpleRespawn : MonoBehaviour
         //if (pl != null) Destroy(pl);  // в конец
         GameObject tmp=null;
         if (mode == 0) //respawn playerprefab
-            tmp = Instantiate(PlayerPrefab, Origin.position, Origin.rotation); // надо сделать чтобы оно могло респавнить не только игрока
+            Debug.Log("...");
+            //tmp = Instantiate(PlayerPrefab, Origin.position, Origin.rotation); // надо сделать чтобы оно могло респавнить не только игрока
+            //tmp = PhotonNetwork.Instantiate(PlayerPrefab.name, Origin.position, Origin.rotation);
         else if (mode == 1 && EnemyPrefab != null) // respawn enemy
             tmp = Instantiate(EnemyPrefab, Origin.position, Origin.rotation);
         if (tmp == null) return;

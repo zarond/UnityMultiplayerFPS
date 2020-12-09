@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 [RequireComponent(typeof(AudioSource))]
 public class Pistol : Weapon
 {
@@ -13,6 +16,8 @@ public class Pistol : Weapon
     public GameObject flarePrefab;
     public GameObject hitPrefab;
     //public bool canhurtplayer = true;
+
+    private PhotonView photonView;
 
     public Pistol() {
         id = 0;
@@ -35,6 +40,11 @@ public class Pistol : Weapon
         CamHandlerObject = transform.parent.parent;
         source = GetComponent<AudioSource>();
         ownerid = this.owner.GetComponent<health>().playerid;
+        photonView = PhotonView.Get(this);//GetComponent<PhotonView>();
+        if (photonView == null)
+        {
+            Debug.Log("Whoops no photonView for poor Pistol");
+        }
     }
 
     override public void Shoot() {
@@ -76,7 +86,9 @@ public class Pistol : Weapon
                     {
                         //hits[i].collider.transform.root.SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
                         //hits[i].collider.transform.root.SendMessage("DoDamage", new object[2] {/*1.0f*/1, this.owner}, SendMessageOptions.DontRequireReceiver);
-                        hits[i].collider.transform.root.SendMessage("DoDamageById", new object[2] {/*1.0f*/1, ownerid }, SendMessageOptions.DontRequireReceiver);
+                        GameObject target = hits[i].collider.transform.root.gameObject;
+                        //hits[i].collider.transform.root.SendMessage("DoDamageById", new object[2] {/*1.0f*/1, ownerid }, SendMessageOptions.DontRequireReceiver);
+                        photonView.RPC("DoDamageById", RpcTarget.Others, new object[2] {1, ownerid });
                     }
                     break;
                 }

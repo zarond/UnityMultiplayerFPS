@@ -22,6 +22,13 @@ public class PlayerManager : MonoBehaviourPun
             camHandler.SetActive(true);
             
         }
+        else
+        {
+            camHandler = this.transform.Find("CameraHandler").gameObject;
+            camHandler.SetActive(true);
+            camHandler.transform.Find("Main Camera").gameObject.SetActive(false);
+            camHandler.transform.Find("fpsrig").gameObject.SetActive(false);
+        }
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
         DontDestroyOnLoad(this.gameObject);
     }
@@ -29,19 +36,7 @@ public class PlayerManager : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        //CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
-
-        //if (_cameraWork != null)
-        //{
-        //    if (photonView.IsMine)
-        //    {
-        //        _cameraWork.OnStartFollowing();
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
-        //}
+        
     }
 
     // Update is called once per frame

@@ -140,6 +140,7 @@ public class GameMode : MonoBehaviourPunCallbacks
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
+                //respawns[0].Respawn(playerPrefab.gameObject);
                 RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
 
             }
@@ -183,6 +184,7 @@ public class GameMode : MonoBehaviourPunCallbacks
         if (indx>=0 && indx< ScoreTable.Count) {
             //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>()
             //.Respawn(null, (ScoreTable[indx].playerid==0)? 0:1 , ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
+            
             respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx].playerid == thisclientid) ? 0 : 1, ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
             ScoreTable[indx].isAlive = true; // данный респавн предполагает что игрок локальной машины имеет id = 0, неправильно  
         } // respawn characters

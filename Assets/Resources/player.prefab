@@ -2157,8 +2157,7 @@ MonoBehaviour:
   teamid: 0
   playerid: 0
   nick: default
-  gameMode: {fileID: 0}
-  hp: 10
+  hp: 4
   maxhp: 10
   DmgNumbers: 1
 --- !u!114 &8885561643610176956
@@ -2328,6 +2327,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
+  - {fileID: 8885561643534113681}
   - {fileID: 2933837869981344451}
   viewIdField: 0
   InstantiationId: 0

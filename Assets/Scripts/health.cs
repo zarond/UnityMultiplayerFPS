@@ -2,23 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 // здоровье и информация, в какой команде игрок
-public class health : MonoBehaviour
+public class health : MonoBehaviour, IPunObservable
 {
     public int teamid = 0;
     public int playerid = 0;
     public string nick = "default";
-    public GameMode gameMode=null;
+    //public GameMode gameMode = null; //GameMode.Instance; //null;
 
+    [Tooltip("The current Health of our player")]
     public /*float*/int hp;
     public /*float*/int maxhp=10;
     public bool DmgNumbers = true;
 
     private Animator an;
 
+    #region IPunObservable implementation
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // We own this player: send the others our data
+            stream.SendNext(hp);
+        }
+        else
+        {
+            // Network player, receive data
+            this.hp = (int)stream.ReceiveNext();
+        }
+    }
+    #endregion
+
     void Start()
     {
-        gameMode = GameObject.Find("Global").GetComponent<GameMode>();
+        //gameMode = GameMode.Instance; //Find("Global").GetComponent<GameMode>();
+        //if (gameMode == null)
+        //{
+        //    Debug.Log("Where is gameMode?");
+        //}
         an = GetComponentInChildren<Animator>();
         //maxhp = 11;
     }
@@ -26,7 +50,7 @@ public class health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hp <= 0) Destroy (this.gameObject);
+        if (hp <= 0) PhotonNetwork.Destroy (this.gameObject);
     }
 
     //void DoDamage(float damage, GameObject whoDamaged = null)
@@ -39,7 +63,7 @@ public class health : MonoBehaviour
             whoDamaged = (GameObject)obj.GetValue(1);
         } catch { return; }
 
-        if (!gameMode.friendlyfire && whoDamaged.GetComponent<health>().teamid!=-1 && teamid == whoDamaged.GetComponent<health>().teamid) { 
+        if (!GameMode.Instance.friendlyfire && whoDamaged.GetComponent<health>().teamid!=-1 && teamid == whoDamaged.GetComponent<health>().teamid) { 
             if (this.gameObject != whoDamaged) return; 
         } // обработка friendlyfire, но ракетница сама себя дамажит, а teamid=-1 значит что дамаг наносится всем
 
@@ -54,15 +78,17 @@ public class health : MonoBehaviour
         }
 
         if (hp <= 0) {
-            if (gameMode!=null)
-            gameMode.RegisterKill(whoDamaged.GetComponent<health>().playerid, this.playerid);
+            if (GameMode.Instance != null)
+                GameMode.Instance.RegisterKill(whoDamaged.GetComponent<health>().playerid, this.playerid);
         };
 
         an.SetTrigger("hit");
     }
 
+    [PunRPC]
     void DoDamageById(object[] obj) // в DoDamage возможны ситуации когда используется ссылка на уничтоженный gameobject стрелявшего, надо передавать playerid
     {
+        Debug.Log("Hit");
         /*float*/
         int damage;
         int whoDamaged;
@@ -72,14 +98,15 @@ public class health : MonoBehaviour
             whoDamaged = (int)obj.GetValue(1);
         }
         catch { return; }
-        int indx = gameMode.findplayerindex(whoDamaged);
+        int indx = GameMode.Instance.findplayerindex(whoDamaged);
 
-        if (!gameMode.friendlyfire && gameMode.ScoreTable[indx].team != -1 && teamid == gameMode.ScoreTable[indx].team)
+        if (!GameMode.Instance.friendlyfire && GameMode.Instance.ScoreTable[indx].team != -1 && teamid == GameMode.Instance.ScoreTable[indx].team)
         {
             if (this.playerid != whoDamaged) return;
         } // обработка friendlyfire, но ракетница сама себя дамажит, а teamid=-1 значит что дамаг наносится всем
 
         hp -= damage;
+        Debug.Log("I received DAMAGE. My hp is " + hp);
         if (DmgNumbers)
         {
             //Debug.Log(this.name + " got damaged by "+damage+"hp, by "+whoDamaged+", "+hp+"hp left"); // надо поменять названия объектов на ники 
@@ -93,8 +120,8 @@ public class health : MonoBehaviour
 
         if (hp <= 0)
         {
-            if (gameMode != null)
-                gameMode.RegisterKill(whoDamaged, this.playerid);
+            if (GameMode.Instance != null)
+                GameMode.Instance.RegisterKill(whoDamaged, this.playerid);
         };
 
         an.SetTrigger("hit");
