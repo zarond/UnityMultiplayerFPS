@@ -65,7 +65,7 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 
     void SetLook()
     {
-        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) // Чтобы при повороте мыши поворачивался только свой персонаж
         {
             return;
         }

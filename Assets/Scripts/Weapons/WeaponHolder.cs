@@ -95,6 +95,7 @@ public class WeaponHolder : MonoBehaviour
             rightHandPoint = Weapons[ActiveWeapon].rightHandPoint;
         }
 
+        
         //Ray ScreenVector = Cam.ScreenPointToRay(new Vector3(Screen.width *0.5f, Screen.height*0.5f,0.0f));
         int layer = ~(1 << 9); // маска слоя все кроме физического коллайдера персонажей
         Ray ScreenVector = new Ray(transform.position, transform.forward);

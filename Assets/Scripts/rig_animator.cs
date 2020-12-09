@@ -30,10 +30,7 @@ public class rig_animator : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        //if ( !photonView.IsMine && PhotonNetwork.IsConnected)
-        //{
-        //    return;
-        //}
+        // Проверку на isMine сюда не надо, иначе уберет анимацию у всех
         //anim.SetFloat("forward", 1.0f);
         //anim.SetFloat("side", 0.0f);
         //controller.transform.InverseTransformVector(controller.Character.velocity);
@@ -48,10 +45,7 @@ public class rig_animator : MonoBehaviourPun
 
     void OnAnimatorIK(int layerIndex)
     {
-        //if (!photonView.IsMine && PhotonNetwork.IsConnected)
-        //{
-        //    return;
-        //}
+        // Проверку на isMine сюда не надо, иначе анимация рук не работает (вбок уходят)
         anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);
         anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);
         anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);
