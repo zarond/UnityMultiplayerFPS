@@ -33,6 +33,11 @@ public class PickUpAmmo : PickUp
             {
                 PhotonNetwork.Destroy(this.gameObject); //Destroy(this.gameObject);
             }
+            else // Вроде и так работает, но на всякий
+            {
+                photonView.RequestOwnership();
+                PhotonNetwork.Destroy(this.gameObject);
+            }
         }
         else
         {
