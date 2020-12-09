@@ -29,7 +29,7 @@ public class SimpleRespawn : MonoBehaviour
 
     // playerid=-1 значит что respawn постарается унаследовать id от pl, любое другое значение - создается с таким id 
     // teamid=-2 - значит что respawn постарается унаследовать teamid от pl, teamid=-1 - будет для режима free4all
-    public void Respawn(GameObject pl=null, int mode=0, int playerid=-1, int teamid=-2, string nick = "default") {
+    public void Respawn(GameObject pl=null, int mode=0, int playerid=-1, int teamid=-1, string nick = "default") {
         //if (pl != null) Destroy(pl);  // в конец
         GameObject tmp=null;
         if (mode == 0) //respawn playerprefab

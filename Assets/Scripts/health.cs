@@ -41,6 +41,7 @@ public class health : MonoBehaviour, IPunObservable
     {
         photonView = GetComponent<PhotonView>();
         nick = photonView.Owner.NickName;
+        //playerid = photonView.Owner.ActorNumber;
         //gameMode = GameMode.Instance; //Find("Global").GetComponent<GameMode>();
         //if (gameMode == null)
         //{
