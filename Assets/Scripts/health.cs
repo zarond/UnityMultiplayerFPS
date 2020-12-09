@@ -54,7 +54,11 @@ public class health : MonoBehaviour, IPunObservable
     {
         if (photonView.IsMine)
         {
-            if (hp <= 0) PhotonNetwork.Destroy(this.gameObject);
+            if (hp <= 0)
+            {
+                PhotonNetwork.Destroy(this.gameObject);
+                Debug.Log("Dead");
+            }
 
         }
 

@@ -49,8 +49,8 @@ public class Pistol : Weapon
 
     override public void Shoot() {
 
-        if (!photonView.IsMine)
-            return;
+        //if (!photonView.IsMine)
+        //    return;
         //Ray ScreenVector = Camera.main.ScreenPointToRay(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0.0f));
 
             int layer = ~(1 << 9); // маска слоя все кроме физического коллайдера персонажей и триггер-коллайдеров самого игрока
