@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 //[RequireComponent(typeof(SphereCollider))]
 
 public class PickUpAmmo : PickUp
@@ -10,10 +13,12 @@ public class PickUpAmmo : PickUp
     public int weaponid;
     public int numberofammo;
 
-    //private void Start()
-   //{
-    //    GetComponent<SphereCollider>().
-    //}
+    private PhotonView photonView;
+
+    private void Start()
+    {
+        photonView = GetComponent<PhotonView>();
+    }
 
     override public void PickUpObject(PickUpSystem WhoPicked)
     {
@@ -24,7 +29,15 @@ public class PickUpAmmo : PickUp
         {
             cmp.Ammo[weaponid] += numberofammo;
             //WhoPicked.Global.PickUps.Remove(this);
-            Destroy(this.gameObject);
+            if (photonView.IsMine)
+            {
+                PhotonNetwork.Destroy(this.gameObject); //Destroy(this.gameObject);
+            }
+            else
+            {
+                // Вызов мастер-клиента и просьба ему прибить pick up
+
+            }
         }
         else
         {
