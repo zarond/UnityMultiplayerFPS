@@ -51,9 +51,9 @@ public class GameMode : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
-        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveRoom();//Disconnect();
         PhotonNetwork.LoadLevel("Launcher");
-        SceneManager.LoadScene("Launcher");
+        //SceneManager.LoadScene("Launcher");
     }
 
     #endregion
@@ -67,7 +67,7 @@ public class GameMode : MonoBehaviourPunCallbacks
         {
             Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
         }
-        Debug.LogFormat("PhotonNetwork : Loading map", PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.Log("PhotonNetwork : Loading map");
         /// We use PhotonNetwork.LoadLevel() to load the level we want, we don't use Unity directly, 
         /// because we want to rely on Photon to load this level on all connected clients in the room, 
         /// since we've enabled PhotonNetwork.AutomaticallySyncScene for this Game.
@@ -121,6 +121,17 @@ public class GameMode : MonoBehaviourPunCallbacks
         StartGame();
     }
     // Start is called before the first frame update
+    
+    public void Respawn()
+        {
+                Debug.Log("ClientState=" + PhotonNetwork.NetworkClientState);
+                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
+                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
+                //respawns[0].Respawn(playerPrefab.gameObject);
+                RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+        }
+
     void Start()
     {
         Instance = this;
@@ -135,13 +146,13 @@ public class GameMode : MonoBehaviourPunCallbacks
         else
         {
             
-            if (PlayerManager.LocalPlayerInstance == null)
+
+            bool notavailable = PhotonNetwork.NetworkClientState == ClientState.Leaving || PhotonNetwork.NetworkClientState == ClientState.ConnectingToMasterServer || PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer;
+            bool available = PhotonNetwork.NetworkClientState == ClientState.Joined;
+            if ((PlayerManager.LocalPlayerInstance == null) && available && !notavailable)
             {
-                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
-                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
-                //respawns[0].Respawn(playerPrefab.gameObject);
-                RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+                
+                Respawn();
 
             }
             else
@@ -150,6 +161,8 @@ public class GameMode : MonoBehaviourPunCallbacks
             }
 
         }
+
+        
 
         //AddNewPlayerToTable(0);
         //AddNewPlayerToTable(1);

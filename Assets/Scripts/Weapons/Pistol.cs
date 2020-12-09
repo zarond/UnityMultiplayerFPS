@@ -90,7 +90,7 @@ public class Pistol : Weapon
                         //hits[i].collider.transform.root.SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);
                         //hits[i].collider.transform.root.SendMessage("DoDamage", new object[2] {/*1.0f*/1, this.owner}, SendMessageOptions.DontRequireReceiver);
                         GameObject target = hits[i].collider.transform.root.gameObject;
-                        Debug.Log(target.name);
+                        Debug.Log(photonView.Owner.NickName + " has hit " + target.name);
                         //hits[i].collider.transform.root.SendMessage("DoDamageById", new object[2] {/*1.0f*/1, ownerid }, SendMessageOptions.DontRequireReceiver);
                         photonView.RPC("DoDamageById", RpcTarget.Others, new object[2] {1, ownerid });
                     }

@@ -2,19 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 public class InputController : MonoBehaviour
 {
     public MovementRigidBody movement;
     public WeaponHolder weapon;
+
+    private PhotonView photonView;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!photonView.IsMine) return;
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             GameMode.Instance.LeaveRoom();

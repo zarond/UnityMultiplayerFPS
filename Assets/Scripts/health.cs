@@ -40,6 +40,7 @@ public class health : MonoBehaviour, IPunObservable
     void Start()
     {
         photonView = GetComponent<PhotonView>();
+        nick = photonView.Owner.NickName;
         //gameMode = GameMode.Instance; //Find("Global").GetComponent<GameMode>();
         //if (gameMode == null)
         //{
@@ -57,7 +58,8 @@ public class health : MonoBehaviour, IPunObservable
             if (hp <= 0)
             {
                 PhotonNetwork.Destroy(this.gameObject);
-                Debug.Log("Dead");
+                GameMode.Instance.Respawn();
+                Debug.Log(nick + " died");
             }
 
         }
@@ -105,7 +107,8 @@ public class health : MonoBehaviour, IPunObservable
     [PunRPC]
     void DoDamageById(object[] obj) // в DoDamage возможны ситуации когда используется ссылка на уничтоженный gameobject стрелявшего, надо передавать playerid
     {
-        Debug.Log("Hit");
+        //Debug.Log(/*photonView.Owner.NickName*/nick + " is damaged!");
+        
         /*float*/
         int damage;
         int whoDamaged;
@@ -123,7 +126,7 @@ public class health : MonoBehaviour, IPunObservable
         } // обработка friendlyfire, но ракетница сама себя дамажит, а teamid=-1 значит что дамаг наносится всем
 
         hp -= damage;
-        Debug.Log("I received DAMAGE. My hp is " + hp);
+        Debug.Log(nick + " received DAMAGE. Its hp is " + hp);
         if (DmgNumbers)
         {
             //Debug.Log(this.name + " got damaged by "+damage+"hp, by "+whoDamaged+", "+hp+"hp left"); // надо поменять названия объектов на ники 
