@@ -6,13 +6,13 @@ using Photon.Pun;
 using Photon.Realtime;
 
 // здоровье и информация, в какой команде игрок
-public class health : MonoBehaviour, IPunObservable
+public class health : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallback
 {
     public int teamid = 0;
     public int playerid = 0;
     public string nick = "default";
     //public GameMode gameMode = null; //GameMode.Instance; //null;
-    private PhotonView photonView;
+    private PhotonView photonView = null;
 
     [Tooltip("The current Health of our player")]
     public /*float*/int hp;
@@ -37,10 +37,21 @@ public class health : MonoBehaviour, IPunObservable
     }
     #endregion
 
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (photonView == null) photonView = GetComponent<PhotonView>();
+        nick = photonView.Owner.NickName;
+        playerid = photonView.Owner.ActorNumber;
+
+        object[] instantiationData = info.photonView.InstantiationData;
+        teamid = (int)instantiationData[0];
+        Debug.LogWarning("Instantiate" + nick + playerid + teamid + instantiationData);
+    }
+
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
-        nick = photonView.Owner.NickName;
+        if (photonView == null) photonView = GetComponent<PhotonView>();
+        //nick = photonView.Owner.NickName;
         //playerid = photonView.Owner.ActorNumber;
         //gameMode = GameMode.Instance; //Find("Global").GetComponent<GameMode>();
         //if (gameMode == null)
@@ -59,7 +70,7 @@ public class health : MonoBehaviour, IPunObservable
             if (hp <= 0)
             {
                 PhotonNetwork.Destroy(this.gameObject);
-                GameMode.Instance.Respawn();
+                //GameMode.Instance.Respawn();
                 Debug.Log(nick + " died");
             }
 
@@ -120,6 +131,8 @@ public class health : MonoBehaviour, IPunObservable
         }
         catch { return; }
         int indx = GameMode.Instance.findplayerindex(whoDamaged);
+
+        if (indx == -1) { Debug.LogWarning("No index found"); return; }
 
         if (!GameMode.Instance.friendlyfire && GameMode.Instance.ScoreTable[indx].team != -1 && teamid == GameMode.Instance.ScoreTable[indx].team)
         {

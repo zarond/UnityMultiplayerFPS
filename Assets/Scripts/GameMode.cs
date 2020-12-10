@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class GameMode : MonoBehaviourPunCallbacks
+public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
 {
     /// <summary>
     /// То, что было в GameManager
@@ -26,7 +26,7 @@ public class GameMode : MonoBehaviourPunCallbacks
             Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
 
-            LoadArena();
+        //    LoadArena();
         }
     }
 
@@ -41,7 +41,7 @@ public class GameMode : MonoBehaviourPunCallbacks
             Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
 
-            LoadArena();
+        //    LoadArena();
         }
     }
 
@@ -81,7 +81,7 @@ public class GameMode : MonoBehaviourPunCallbacks
     /// </summary>
 
 
-    [HideInInspector]
+    //[HideInInspector]
     public class /*struct*/ Score {
         public int playerid;
         public int score;
@@ -103,7 +103,7 @@ public class GameMode : MonoBehaviourPunCallbacks
     // сюда идет таблица очков и настройки режима игры
     public bool friendlyfire = false;
     public List<Score> ScoreTable = new List<Score>();
-    [HideInInspector]
+    //[HideInInspector]
     public List<Vector3Int> KillTable = new List<Vector3Int>();
     public int SpawnNumberOfEnemies;
 
@@ -116,13 +116,34 @@ public class GameMode : MonoBehaviourPunCallbacks
 
     int counter = 0;
 
+    #region IPunObservable implementation
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // We own this player: send the others our data
+            string data = JsonUtility.ToJson(ScoreTable);
+            stream.SendNext(data);
+        }
+        else
+        {
+            // Network player, receive data
+            //this.hp = (int)stream.ReceiveNext();
+            string data = (string)stream.ReceiveNext();
+            Debug.Log(data);
+            ScoreTable = JsonUtility.FromJson<List<Score>>(data);
+        }
+    }
+    #endregion
+
     void Awake()
     {
+        OnJoinedRoomCustom();
         StartGame();
     }
     // Start is called before the first frame update
     
-    public void Respawn()
+    /*public void Respawn()
         {
                 Debug.Log("ClientState=" + PhotonNetwork.NetworkClientState);
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
@@ -131,14 +152,22 @@ public class GameMode : MonoBehaviourPunCallbacks
                 //respawns[0].Respawn(playerPrefab.gameObject);
                 RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
         }
+        */
+    public void OnJoinedRoomCustom()
+    {
+        thisclientid = PhotonNetwork.LocalPlayer.ActorNumber;
+        Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber + "joined room");
+        RegisterNewPlayerAndSpawn(-1, 0, PhotonNetwork.LocalPlayer.NickName);
+    }
 
     void Start()
     {
         Instance = this;
 
         respawns = FindObjectsOfType<SimpleRespawn>();
-        thisclientid = 0; // для примера, надо назначать через интернет
+        thisclientid = PhotonNetwork.LocalPlayer.ActorNumber;//0; // для примера, надо назначать через интернет
 
+        /*
         if (playerPrefab == null)
         {
             Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
@@ -161,7 +190,7 @@ public class GameMode : MonoBehaviourPunCallbacks
             }
 
         }
-
+        */
         
 
         //AddNewPlayerToTable(0);
@@ -195,22 +224,28 @@ public class GameMode : MonoBehaviourPunCallbacks
     {
         if (PlayerManager.LocalPlayerInstance == null)
         {
-            Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
+            //Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
             // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-            GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
+            //GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, respawns[0].Origin.position, Quaternion.identity);
             //respawns[0].Respawn(playerPrefab.gameObject);
-            RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+            //RegisterNewPlayerAndSpawn(0, 0, "player"); // пока что персонаж под номером 0 всегда - игрок
+
+            //int indxt = ScoreTable.FindIndex(x => x.playerid == thisclientid);
+            //respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indxt].playerid == thisclientid) ? 0 : 1, ScoreTable[indxt].playerid, ScoreTable[indxt].team, ScoreTable[indxt].nick);
+            //ScoreTable[indxt].isAlive = true;
 
         }
-
 
         int indx = ScoreTable.FindIndex(x => x.isAlive == false);
         if (indx>=0 && indx< ScoreTable.Count) {
             //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>()
             //.Respawn(null, (ScoreTable[indx].playerid==0)? 0:1 , ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
-            
-            respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx].playerid == thisclientid) ? 0 : 1, ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
-            ScoreTable[indx].isAlive = true; // данный респавн предполагает что игрок локальной машины имеет id = 0, неправильно  
+            if (ScoreTable[indx].playerid == thisclientid) {
+                respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx].playerid == thisclientid) ? 0 : 1, ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
+                ScoreTable[indx].isAlive = true;
+            }
+            //respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx].playerid == thisclientid) ? 0 : 1, ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
+            //ScoreTable[indx].isAlive = true; // данный респавн предполагает что игрок локальной машины имеет id = 0, неправильно  
         } // respawn characters
     }
 
@@ -289,11 +324,11 @@ public class GameMode : MonoBehaviourPunCallbacks
     public void RegisterNewPlayerAndSpawn(int team, int mode = 0, string nick = "default")
     {
         //int playerid = ScoreTable.Count; // не учитывает если игрок выйдет из игры и список игроков уменьшится
-        int playerid = counter++;
+        int playerid = PhotonNetwork.LocalPlayer.ActorNumber;//counter++;
 
         //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>().Respawn(null, mode, playerid, team, nick);
         //respawns[r.Next(0, respawns.Length)].Respawn(null, mode, playerid, team, nick);
         AddNewPlayerToTable(playerid, team, nick);
-        ScoreTable[playerid].isAlive = true;
+        //ScoreTable[playerid].isAlive = true;
     }
 }

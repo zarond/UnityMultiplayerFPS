@@ -32,12 +32,16 @@ public class SimpleRespawn : MonoBehaviour
     public void Respawn(GameObject pl=null, int mode=0, int playerid=-1, int teamid=-1, string nick = "default") {
         //if (pl != null) Destroy(pl);  // в конец
         GameObject tmp=null;
-        if (mode == 0) //respawn playerprefab
+        if (mode == 0)
+        { //respawn playerprefab
             Debug.Log("Respawning...");
             //tmp = Instantiate(PlayerPrefab, Origin.position, Origin.rotation); // надо сделать чтобы оно могло респавнить не только игрока
             //tmp = PhotonNetwork.Instantiate(PlayerPrefab.name, Origin.position, Origin.rotation);
-        else if (mode == 1 && EnemyPrefab != null) // respawn enemy
-            tmp = Instantiate(EnemyPrefab, Origin.position, Origin.rotation);
+            object[] myCustomInitData = { teamid };
+            tmp = PhotonNetwork.Instantiate(PlayerPrefab.name, Origin.position, Origin.rotation,0, myCustomInitData);
+        }
+        //else if (mode == 1 && EnemyPrefab != null) // respawn enemy
+        //    tmp = Instantiate(EnemyPrefab, Origin.position, Origin.rotation);
         if (tmp == null) return;
 
         health hlth = tmp.GetComponent<health>();

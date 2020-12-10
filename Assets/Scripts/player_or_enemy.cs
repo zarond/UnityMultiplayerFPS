@@ -16,6 +16,7 @@ public class player_or_enemy : MonoBehaviourPun
     public GameObject camHandler;
     void Awake()
     {
+        /*
         // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
         if (photonView.IsMine)
         {
@@ -33,6 +34,7 @@ public class player_or_enemy : MonoBehaviourPun
             camHandler.transform.Find("fpsrig").gameObject.SetActive(false);
         }
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
+        */
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -42,7 +44,7 @@ public class player_or_enemy : MonoBehaviourPun
         if (bePlayerIfIdIsZero) {
             isplayer = (GetComponent<health>().playerid == 0);
         }
-        if (isplayer == false) { 
+        if (photonView.IsMine == false/*isplayer == false*/) { 
             ChangeToEnemy();
             if (!toAttachAiScript) Destroy(GetComponent<ai>());
         }
