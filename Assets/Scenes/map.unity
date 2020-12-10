@@ -1757,6 +1757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyfire: 0
+  ScoreTable: []
   KillTable: []
   SpawnNumberOfEnemies: 0
   respawns: []

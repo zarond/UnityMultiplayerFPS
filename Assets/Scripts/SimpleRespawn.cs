@@ -31,6 +31,8 @@ public class SimpleRespawn : MonoBehaviour
     // teamid=-2 - значит что respawn постарается унаследовать teamid от pl, teamid=-1 - будет для режима free4all
     public void Respawn(GameObject pl=null, int mode=0, int playerid=-1, int teamid=-1, string nick = "default") {
         //if (pl != null) Destroy(pl);  // в конец
+        if (PhotonNetwork.NetworkClientState == ClientState.Leaving || PhotonNetwork.NetworkClientState == ClientState.ConnectingToMasterServer) return;
+
         GameObject tmp=null;
         if (mode == 0)
         { //respawn playerprefab

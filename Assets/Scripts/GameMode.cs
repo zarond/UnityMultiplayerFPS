@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using System;
 using UnityEngine.SceneManagement;
+//using System.Linq;
 
 using Photon.Pun;
 using Photon.Realtime;
@@ -24,9 +26,10 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+            AddNewPlayerToTable(other.ActorNumber, -1, other.NickName);
 
 
-        //    LoadArena();
+            //    LoadArena();
         }
     }
 
@@ -39,7 +42,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
+            RemovePlayer(other.ActorNumber);
 
         //    LoadArena();
         }
@@ -82,6 +85,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
 
 
     //[HideInInspector]
+    [System.Serializable]
     public class /*struct*/ Score {
         public int playerid;
         public int score;
@@ -119,14 +123,35 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
     #region IPunObservable implementation
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        /*
+        Wrapper test = new Wrapper();
+        test.List = ScoreTable;
+        string data = JsonUtility.ToJson(test);
+        Debug.Log(data);*/
+        //List<Score> Tmp = (JsonUtility.FromJson<Wrapper>(data)).List;
+        //List<Score> TmpL = (JsonUtility.FromJson<Score[]>(data)).ToList();
+        //ScoreTable = (JsonUtility.FromJson<Wrapper>(data)).List;
+
         if (stream.IsWriting)
         {
+            if (PhotonNetwork.IsMasterClient) {
+                Wrapper test = new Wrapper();
+                test.List = ScoreTable;
+                string data = JsonUtility.ToJson(test);
+                Debug.Log(data + "sending");
+                stream.SendNext(data);
+            }
             // We own this player: send the others our data
             //string data = JsonUtility.ToJson(ScoreTable);
             //stream.SendNext(data);
         }
         else
         {
+            if (PhotonNetwork.IsMasterClient == false) {
+                string data = (string)stream.ReceiveNext();
+                ScoreTable = (JsonUtility.FromJson<Wrapper>(data)).List;
+                Debug.Log(data + "receving");
+            }
             // Network player, receive data
             //this.hp = (int)stream.ReceiveNext();
             //string data = (string)stream.ReceiveNext();
@@ -138,6 +163,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
+        //thisclientid = PhotonNetwork.LocalPlayer.ActorNumber;
         OnJoinedRoomCustom();
         StartGame();
     }
@@ -157,7 +183,8 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
     {
         thisclientid = PhotonNetwork.LocalPlayer.ActorNumber;
         Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber + "joined room");
-        RegisterNewPlayerAndSpawn(-1, 0, PhotonNetwork.LocalPlayer.NickName);
+        if (PhotonNetwork.IsMasterClient)
+            RegisterNewPlayerAndSpawn(-1, 0, PhotonNetwork.LocalPlayer.NickName);
     }
 
     void Start()
@@ -219,9 +246,23 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
 
     //}
 
+    public class Wrapper {
+        public List<Score> List;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        /*
+        Wrapper test = new Wrapper();
+        test.List = ScoreTable;
+        string data = JsonUtility.ToJson(test);
+        Debug.Log(data);
+        List<Score> Tmp = (JsonUtility.FromJson<Wrapper>(data)).List;
+        //List<Score> TmpL = (JsonUtility.FromJson<Score[]>(data)).ToList();
+        Debug.Log(Tmp[0].nick);
+        */
+
         if (PlayerManager.LocalPlayerInstance == null)
         {
             //Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
@@ -240,7 +281,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
         if (indx>=0 && indx< ScoreTable.Count) {
             //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>()
             //.Respawn(null, (ScoreTable[indx].playerid==0)? 0:1 , ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
-            if (ScoreTable[indx].playerid == thisclientid) {
+            if (ScoreTable[indx].playerid == PhotonNetwork.LocalPlayer.ActorNumber) {
                 respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx].playerid == thisclientid) ? 0 : 1, ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
                 ScoreTable[indx].isAlive = true;
             }

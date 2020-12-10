@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class DeathPit : MonoBehaviour
 {
-    GameMode gm;
+    //GameMode gm;
 
     private void Start()
     {
-        gm = GameObject.Find("Global").GetComponent<GameMode>();
+        //gm = GameObject.Find("Global").GetComponent<GameMode>();
     }
     private void OnTriggerEnter(Collider collision)
     {

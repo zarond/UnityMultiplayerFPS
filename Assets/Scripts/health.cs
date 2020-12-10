@@ -46,6 +46,8 @@ public class health : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
         object[] instantiationData = info.photonView.InstantiationData;
         teamid = (int)instantiationData[0];
         Debug.LogWarning("Instantiate" + nick + playerid + teamid + instantiationData);
+
+        GameMode.Instance.ScoreTable[GameMode.Instance.findplayerindex(photonView.Owner.ActorNumber)].isAlive = true;
     }
 
     void Start()
