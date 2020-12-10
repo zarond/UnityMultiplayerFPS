@@ -122,16 +122,16 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             // We own this player: send the others our data
-            string data = JsonUtility.ToJson(ScoreTable);
-            stream.SendNext(data);
+            //string data = JsonUtility.ToJson(ScoreTable);
+            //stream.SendNext(data);
         }
         else
         {
             // Network player, receive data
             //this.hp = (int)stream.ReceiveNext();
-            string data = (string)stream.ReceiveNext();
-            Debug.Log(data);
-            ScoreTable = JsonUtility.FromJson<List<Score>>(data);
+            //string data = (string)stream.ReceiveNext();
+            //Debug.Log(data);
+            //ScoreTable = JsonUtility.FromJson<List<Score>>(data);
         }
     }
     #endregion

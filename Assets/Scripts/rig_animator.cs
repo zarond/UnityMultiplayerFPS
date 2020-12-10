@@ -30,6 +30,7 @@ public class rig_animator : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
+        if (photonView!=null && photonView.IsMine == false) return;
         // Проверку на isMine сюда не надо, иначе уберет анимацию у всех
         //anim.SetFloat("forward", 1.0f);
         //anim.SetFloat("side", 0.0f);
