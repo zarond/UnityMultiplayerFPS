@@ -82,7 +82,8 @@ public class Pistol : Weapon
             for (int i = 0; i < hits.Length; ++i)
             {
                 //Debug.Log(hits[i].collider);
-                if (hits[i].collider.transform.root.gameObject != this.owner && hits[i].collider.gameObject.layer!=2) {
+                if (hits[i].collider.transform.root.gameObject != this.owner && hits[i].collider.gameObject.layer != 2)
+                {
                     //Instantiate(bulletPrefab, hits[i].point, Quaternion.LookRotation(hits[i].normal));
                     Instantiate(hitPrefab, hits[i].point, Quaternion.LookRotation(hits[i].normal));
                     if (hits[i].collider.gameObject.layer == 10)
@@ -92,7 +93,14 @@ public class Pistol : Weapon
                         GameObject target = hits[i].collider.transform.root.gameObject;
                         Debug.Log(photonView.Owner.NickName + " has hit " + target.name);
                         //hits[i].collider.transform.root.SendMessage("DoDamageById", new object[2] {/*1.0f*/1, ownerid }, SendMessageOptions.DontRequireReceiver);
-                        photonView.RPC("DoDamageById", RpcTarget.Others, new object[2] {1, ownerid });
+
+                        var targetphview = target.GetComponent<PhotonView>();
+
+                        Debug.Log("Doing damage to " + targetphview.Owner.NickName + " by player(id) " + ownerid + ", ph view id: " + targetphview.ViewID);
+
+                        targetphview.RPC("DoDamageById", RpcTarget.Others, new object[2] { 1, ownerid });
+                        /*target.*/
+                        //photonView.RPC("DoDamageById", RpcTarget.Others, new object[2] {1, ownerid });
                     }
                     break;
                 }
