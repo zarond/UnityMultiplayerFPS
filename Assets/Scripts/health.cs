@@ -47,7 +47,9 @@ public class health : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
         teamid = (int)instantiationData[0];
         Debug.LogWarning("Instantiate" + nick + playerid + teamid + instantiationData);
 
-        GameMode.Instance.ScoreTable[GameMode.Instance.findplayerindex(photonView.Owner.ActorNumber)].isAlive = true;
+        int indx = GameMode.Instance.findplayerindex(photonView.Owner.ActorNumber);
+        if (indx < 0) return;
+        GameMode.Instance.ScoreTable[indx].isAlive = true;
     }
 
     void Start()
@@ -157,8 +159,9 @@ public class health : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
         if (hp <= 0)
         {
             if (GameMode.Instance != null)
-                GameMode.Instance.RegisterKill(whoDamaged, this.playerid);
-                GameMode.Instance.photonView.RPC("RegisterKillViaObject", RpcTarget.Others, new object[2] { whoDamaged, this.playerid });
+                //GameMode.Instance.RegisterKill(whoDamaged, this.playerid);
+                if (PhotonView.Get(this).IsMine)
+                    GameMode.Instance.photonView.RPC("RegisterKillViaObject", RpcTarget.All, new object[2] { whoDamaged, this.playerid });
         };
 
         an.SetTrigger("hit");
