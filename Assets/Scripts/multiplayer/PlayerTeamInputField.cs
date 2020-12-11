@@ -45,7 +45,7 @@ public class PlayerTeamInputField : MonoBehaviour
     /// <param team="value">Player's team number</param>
     public void SetPlayerTeam(string value)
     {
-        string defaultTeam = "1";
+        //string defaultTeam = "1";
         // #Important
         if (string.IsNullOrEmpty(value))
         {
@@ -53,14 +53,14 @@ public class PlayerTeamInputField : MonoBehaviour
             return;
         }
         Hashtable playerProperties = new Hashtable();
-        playerProperties.Add("PlayerTeam", defaultTeam);
+        playerProperties.Add("PlayerTeam", value);
         PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
         //PhotonNetwork.LocalPlayer.PlayerTeam = value;
         //PhotonNetwork.NickName = value;
 
 
         PlayerPrefs.SetString(playerTeamPrefKey, value);
-        Debug.Log("Player team: " + (int)PhotonNetwork.LocalPlayer.CustomProperties["PlayerTeam"]);
+        Debug.Log("Player team: " + PhotonNetwork.LocalPlayer.CustomProperties["PlayerTeam"]);
     }
 
     #endregion
