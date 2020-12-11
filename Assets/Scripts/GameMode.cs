@@ -26,8 +26,11 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-            AddNewPlayerToTable(other.ActorNumber, -1, other.NickName);
-
+            //AddNewPlayerToTable(other.ActorNumber, -1, other.NickName);
+            string t = other.CustomProperties["PlayerTeam"].ToString();
+            int T;
+            if (int.TryParse(t, out T) == false) T = -1;
+            AddNewPlayerToTable(other.ActorNumber, T, other.NickName);
 
             //    LoadArena();
         }
@@ -54,6 +57,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
 
     public void LeaveRoom()
     {
+        RemovePlayer(PhotonNetwork.LocalPlayer.ActorNumber);
         PhotonNetwork.LeaveRoom();//Disconnect();
         PhotonNetwork.LoadLevel("Launcher");
         //SceneManager.LoadScene("Launcher");
@@ -185,8 +189,13 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
     {
         thisclientid = PhotonNetwork.LocalPlayer.ActorNumber;
         Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber + "joined room");
-        if (PhotonNetwork.IsMasterClient)
-            RegisterNewPlayerAndSpawn(-1, 0, PhotonNetwork.LocalPlayer.NickName);
+        if (PhotonNetwork.IsMasterClient) {
+            string t = PhotonNetwork.LocalPlayer.CustomProperties["PlayerTeam"].ToString();
+            int T;
+            if (int.TryParse(t, out T) == false) T=-1;
+            RegisterNewPlayerAndSpawn(T, 0, PhotonNetwork.LocalPlayer.NickName); 
+        }
+
     }
 
     void Start()
