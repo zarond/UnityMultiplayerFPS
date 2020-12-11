@@ -158,6 +158,7 @@ public class health : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
         {
             if (GameMode.Instance != null)
                 GameMode.Instance.RegisterKill(whoDamaged, this.playerid);
+                GameMode.Instance.photonView.RPC("RegisterKillViaObject", RpcTarget.Others, new object[2] { whoDamaged, this.playerid });
         };
 
         an.SetTrigger("hit");

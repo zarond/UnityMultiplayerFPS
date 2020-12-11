@@ -120,6 +120,8 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
 
     int counter = 0;
 
+    //private PhotonView photonView;
+
     #region IPunObservable implementation
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -138,7 +140,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
                 Wrapper test = new Wrapper();
                 test.List = ScoreTable;
                 string data = JsonUtility.ToJson(test);
-                Debug.Log(data + "sending");
+                //Debug.Log(data + "sending");
                 stream.SendNext(data);
             }
             // We own this player: send the others our data
@@ -150,7 +152,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
             if (PhotonNetwork.IsMasterClient == false) {
                 string data = (string)stream.ReceiveNext();
                 ScoreTable = (JsonUtility.FromJson<Wrapper>(data)).List;
-                Debug.Log(data + "receving");
+                //Debug.Log(data + "receving");
             }
             // Network player, receive data
             //this.hp = (int)stream.ReceiveNext();
@@ -337,6 +339,17 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
         KillTable.Add(new Vector3Int(player1, player2, 0));
         if (OnKillRegistered == null) return;
         OnKillRegistered(player1,player2);
+    }
+    [PunRPC]
+    public void RegisterKillViaObject(object[] par) {
+        int player1, player2;
+        try
+        {
+            player1 = (int)par.GetValue(0);
+            player2 = (int)par.GetValue(1);
+        }
+        catch { return; }
+        RegisterKill(player1,player2);
     }
 
 

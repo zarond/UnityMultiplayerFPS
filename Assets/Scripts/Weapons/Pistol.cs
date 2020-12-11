@@ -72,8 +72,10 @@ public class Pistol : Weapon
         // другой способ
 
         RaycastHit[] hits = Physics.RaycastAll(ScreenVector, Mathf.Infinity, layer).OrderBy(h => h.distance).ToArray();
-        //GameObject flare = Instantiate(bulletPrefab, BarrelEnd.position, BarrelEnd.rotation);
-        GameObject flare = Instantiate(flarePrefab, BarrelEnd.position, BarrelEnd.rotation);
+
+        //GameObject flare = Instantiate(flarePrefab, BarrelEnd.position, BarrelEnd.rotation);
+        GameObject flare = PhotonNetwork.Instantiate(flarePrefab.name, BarrelEnd.position, BarrelEnd.rotation);
+
         //Debug.Log("Shot with Pistol");
         source.PlayOneShot(firesound, 0.4f);
 
@@ -84,8 +86,8 @@ public class Pistol : Weapon
                 //Debug.Log(hits[i].collider);
                 if (hits[i].collider.transform.root.gameObject != this.owner && hits[i].collider.gameObject.layer != 2)
                 {
-                    //Instantiate(bulletPrefab, hits[i].point, Quaternion.LookRotation(hits[i].normal));
-                    Instantiate(hitPrefab, hits[i].point, Quaternion.LookRotation(hits[i].normal));
+                    //Instantiate(hitPrefab, hits[i].point, Quaternion.LookRotation(hits[i].normal));
+                    PhotonNetwork.Instantiate(hitPrefab.name, hits[i].point, Quaternion.LookRotation(hits[i].normal));
                     if (hits[i].collider.gameObject.layer == 10)
                     {
                         //hits[i].collider.transform.root.SendMessage("DoDamage", 1.0f, SendMessageOptions.DontRequireReceiver);

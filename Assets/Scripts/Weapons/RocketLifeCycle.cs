@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RocketLifeCycle : MonoBehaviour
+using Photon.Pun;
+using Photon.Realtime;
+
+public class RocketLifeCycle : MonoBehaviour, IPunInstantiateMagicCallback
 {
     private SphereCollider col;
     private Rigidbody rgbody;
@@ -20,10 +23,13 @@ public class RocketLifeCycle : MonoBehaviour
         Destroy(this.gameObject, 10f); // удалить объект если он не попал никуда в течении 10 секунд
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        
+        rgbody = GetComponent<Rigidbody>();
+        object[] instantiationData = info.photonView.InstantiationData;
+        ownerid = (int)instantiationData[0]; // задать принадлежность снаряда
+        rgbody.velocity = (Vector3)instantiationData[1];
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -31,10 +37,19 @@ public class RocketLifeCycle : MonoBehaviour
         if (!alreadyhit)
         {
             alreadyhit = true;
-            GameObject tmp = Instantiate(Impact, transform.position, transform.rotation);
-            tmp.GetComponent<RocketImpact>().owner = this.owner; // задать принадлежность взрыва, может быть ошибка при отложенном попадании
-            tmp.GetComponent<RocketImpact>().ownerid = this.ownerid; // задать принадлежность взрыва
+            //GameObject tmp = Instantiate(Impact, transform.position, transform.rotation);
+            //tmp.GetComponent<RocketImpact>().owner = this.owner; // задать принадлежность взрыва, может быть ошибка при отложенном попадании
+            //tmp.GetComponent<RocketImpact>().ownerid = this.ownerid; // задать принадлежность взрыва
             //Debug.Log("Hit");
+            //Destroy(this.gameObject);
+
+            // for photon
+            if ( PhotonView.Get(this).IsMine)
+            {
+                object[] myCustomInitData = { ownerid };
+                GameObject tmp = PhotonNetwork.Instantiate(Impact.name, transform.position, transform.rotation, 0, myCustomInitData);
+                //if (PhotonView.Get(this)) PhotonNetwork.Destroy(this.gameObject);
+            }
             Destroy(this.gameObject);
         }
     }
