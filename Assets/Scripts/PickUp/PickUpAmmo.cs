@@ -18,6 +18,7 @@ public class PickUpAmmo : PickUp
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
+        photonView.SetOwnerInternal(PhotonNetwork.MasterClient, PhotonNetwork.MasterClient.ActorNumber);
     }
 
     override public void PickUpObject(PickUpSystem WhoPicked)
@@ -35,7 +36,12 @@ public class PickUpAmmo : PickUp
             }
             else // Вроде и так работает, но на всякий
             {
-                photonView.RequestOwnership();
+                Debug.Log("transfering ownership from " + photonView.Owner.NickName);
+                //photonView.RequestOwnership();
+                //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+                //Debug.Log("owner is now " + photonView.Owner.NickName + " / should be " + PhotonNetwork.LocalPlayer.NickName);
+                photonView.SetOwnerInternal(PhotonNetwork.LocalPlayer, PhotonNetwork.LocalPlayer.ActorNumber);
+                Debug.Log("owner is now " + photonView.Owner.NickName + " / should be " + PhotonNetwork.LocalPlayer.NickName);
                 PhotonNetwork.Destroy(this.gameObject);
             }
         }

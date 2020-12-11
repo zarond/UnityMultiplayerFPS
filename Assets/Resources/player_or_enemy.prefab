@@ -2146,10 +2146,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isplayer: 0
   toAttachAiScript: 0
-  bePlayerIfIdIsZero: 0
+  bePlayerIfIdIsZero: 1
   ChangesComponents:
   - {fileID: 3466639786140700178}
   - {fileID: 1865425192}
+  - {fileID: 8885561643610176956}
   ChangesObjects:
   - {fileID: 8671413108965537527}
   - {fileID: 7066430809565205266}
