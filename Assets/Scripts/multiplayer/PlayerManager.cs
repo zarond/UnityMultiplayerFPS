@@ -36,7 +36,7 @@ public class PlayerManager : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        
+        Debug.Log("Player team: "+(int)PhotonNetwork.LocalPlayer.CustomProperties["PlayerTeam"]);
     }
 
     // Update is called once per frame
