@@ -31,6 +31,10 @@ public class Pistol : Weapon
         //lifeDuration = 30.0f;
         //speed = 10.0f;
         //bulletPrefab = (GameObject)Resources.Load("bullet.prefab");
+
+        // added
+        //sourceInner = source;
+        //firesoundInner = firesound;
     }
 
     void Start()
@@ -41,10 +45,12 @@ public class Pistol : Weapon
         source = GetComponent<AudioSource>();
         ownerid = this.owner.GetComponent<health>().playerid;
         photonView = PhotonView.Get(this);//GetComponent<PhotonView>();
+        //photonView = this.owner.GetComponent<PhotonView>();
+        //photonView.ObservedComponents.Add(this);
         if (photonView == null)
         {
             Debug.Log("Whoops no photonView for poor Pistol");
-        }
+        } else { Debug.Log(photonView.ViewID); }
     }
 
     override public void Shoot() {
@@ -77,7 +83,8 @@ public class Pistol : Weapon
         GameObject flare = PhotonNetwork.Instantiate(flarePrefab.name, BarrelEnd.position, BarrelEnd.rotation);
 
         //Debug.Log("Shot with Pistol");
-        source.PlayOneShot(firesound, 0.4f);
+        //source.PlayOneShot(firesound, 0.4f);
+        photonView.RPC("playshoot", RpcTarget.All);
 
         if (hits != null)
         {
@@ -100,7 +107,7 @@ public class Pistol : Weapon
 
                         Debug.Log("Doing damage to " + targetphview.Owner.NickName + " by player(id) " + ownerid + ", ph view id: " + targetphview.ViewID);
 
-                        targetphview.RPC("DoDamageById", RpcTarget.Others, new object[2] { 1, ownerid });
+                        targetphview.RPC("DoDamageById", RpcTarget.All/*Others*/, new object[2] { 1, ownerid });
                         /*target.*/
                         //photonView.RPC("DoDamageById", RpcTarget.Others, new object[2] {1, ownerid });
                     }
@@ -110,5 +117,10 @@ public class Pistol : Weapon
             }
         }
 
+    }
+
+    [PunRPC]
+    void playshoot() {
+        source.PlayOneShot(firesound, 0.4f);
     }
 }

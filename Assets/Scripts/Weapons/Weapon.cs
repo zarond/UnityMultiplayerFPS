@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 //[System.Serializable]
 public class Weapon : MonoBehaviour
 {
@@ -47,6 +50,10 @@ public class Weapon : MonoBehaviour
     public GameObject owner;
     public int ownerid;
 
+    // added
+    //protected AudioSource sourceInner;
+    //protected AudioClip firesoundInner;
+
     public Weapon() {
         //timer = -TimeToPressTrigger;
     }
@@ -75,5 +82,11 @@ public class Weapon : MonoBehaviour
     virtual public void Shoot() {
         Debug.Log("shot");
     }
+
+    //[PunRPC]
+    //void playshoot()
+    //{
+    //    sourceInner.PlayOneShot(firesoundInner, 0.4f);
+    //}
 
 }
