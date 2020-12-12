@@ -8,7 +8,7 @@
 Скачайте проект и импортируйте его в Unity версии не ниже 2020.1.9f1. Для правильной работы импорта ассетов необходим установленный на компьютер Blender версии 2.82a или выше.
 
 Рекомендуется в Unity в меню браузера файлов проекта произвести повторный импорт всех ассетов. Также повторный импорт необходим если модели не имеют текстур и наблюдаются ошибки анимации.
-![](https://github.com/zarond/UnityMultiplayerFPS/pics/fig.png)
+![](https://github.com/zarond/UnityMultiplayerFPS/tree/master/pics/fig.png)
 
 ## Использование
 
@@ -16,12 +16,12 @@
 
 Для сборки и запуска программы используете File/Build And Run
 
-![](https://github.com/zarond/UnityMultiplayerFPS/pics/fig2.png)
+![](https://github.com/zarond/UnityMultiplayerFPS/tree/master/pics/fig2.png)
 
 Для запуска и отладки программы в Unity нажмите кнопку Play
 &#9658;
 
-![](https://github.com/zarond/UnityMultiplayerFPS/pics/fig1.png)
+![](https://github.com/zarond/UnityMultiplayerFPS/tree/master/pics/fig1.png)
 
 Запустив программу, в предложенных полях введите свой ник, который будет использоваться в игре, а также номер команды, за которую собираетесь играть (от -1 до 4, команды отличаются цветами, не наносят урона игрокам своей команды, кроме команды '-1', которая играет против всех), и нажмите кнопку Play!
 
