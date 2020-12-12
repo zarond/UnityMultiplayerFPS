@@ -285,9 +285,15 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
             //int indxt = ScoreTable.FindIndex(x => x.playerid == thisclientid);
             //respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indxt].playerid == thisclientid) ? 0 : 1, ScoreTable[indxt].playerid, ScoreTable[indxt].team, ScoreTable[indxt].nick);
             //ScoreTable[indxt].isAlive = true;
-
+            int indx1 = findplayerindex(PhotonNetwork.LocalPlayer.ActorNumber);
+            if (indx1 >= 0 && indx1 < ScoreTable.Count)
+            {
+                respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx1].playerid == thisclientid) ? 0 : 1, ScoreTable[indx1].playerid, ScoreTable[indx1].team, ScoreTable[indx1].nick);
+                ScoreTable[indx1].isAlive = true;
+            }
         }
 
+        /* потому что если ты и другой игрок мертв, то ты не спавнишься если его id<твоего
         int indx = ScoreTable.FindIndex(x => x.isAlive == false);
         if (indx>=0 && indx< ScoreTable.Count) {
             //GameObject.FindWithTag("Respawn").GetComponent<SimpleRespawn>()
@@ -299,6 +305,7 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
             //respawns[r.Next(0, respawns.Length)].Respawn(null, (ScoreTable[indx].playerid == thisclientid) ? 0 : 1, ScoreTable[indx].playerid, ScoreTable[indx].team, ScoreTable[indx].nick);
             //ScoreTable[indx].isAlive = true; // данный респавн предполагает что игрок локальной машины имеет id = 0, неправильно  
         } // respawn characters
+        */
     }
 
     //public void RegisterNewPlayerAndSpawn(int team, int mode=0, string nick = "default") {

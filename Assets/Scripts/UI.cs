@@ -174,23 +174,29 @@ public class UI : MonoBehaviour
     }
 
     void ShowKillMessage(int player1, int player2) {
+        int tmp1 = gameMode.findplayerindex(player1);
+        int tmp2 = gameMode.findplayerindex(player2);
+        string txt1 = (tmp1 < 0) ? "???" : gameMode.ScoreTable[tmp1].nick;
+        string txt2 = (tmp2 < 0) ? "???" : gameMode.ScoreTable[tmp2].nick;
+
         if (player1 == player2) { // mistakes were made
         }
         else { // x pwned by y
         }
         if (player1 == Health.playerid){ // show message in the center of the screen
             transform.GetChild(7).gameObject.SetActive(true);
-            transform.GetChild(7).GetChild(0).GetComponent<Text>().text = "you killed " +
-            gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick;
+            transform.GetChild(7).GetChild(0).GetComponent<Text>().text = "you killed " + txt2;
+            //gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick;
         } 
         else if (player2 == Health.playerid) { // show message in the center of the screen
             transform.GetChild(7).gameObject.SetActive(true);
-            transform.GetChild(7).GetChild(0).GetComponent<Text>().text = "pwned by " +
-            gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick;
+            transform.GetChild(7).GetChild(0).GetComponent<Text>().text = "pwned by " + txt1;
+            //gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick;
         }
         UpdateKillBoardUI();
-        Debug.Log(gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick
-        + " pwned by " +gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick);
+        //Debug.Log(gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick
+        //+ " pwned by " +gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick);
+        Debug.Log(txt2 + " pwned by " + txt1);
     }
 
     void UpdateKillBoardUI()
@@ -212,10 +218,13 @@ public class UI : MonoBehaviour
         {
             int player1 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].x;
             int player2 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].y;
-            KillTable.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = 
-            gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick + " pwned by "
-            //KillTable.transform.GetChild(i).GetChild(1).GetComponent<Text>().text = 
-            + gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick;
+            int tmp1 = gameMode.findplayerindex(player1);
+            int tmp2 = gameMode.findplayerindex(player2);
+            string txt1 = (tmp1 < 0) ? "???" : gameMode.ScoreTable[tmp1].nick;
+            string txt2 = (tmp2 < 0) ? "???" : gameMode.ScoreTable[tmp2].nick;
+            KillTable.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = txt2 + " pwned by " + txt1;
+            //gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick + " pwned by "
+            //+ gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick;
 
         }
 

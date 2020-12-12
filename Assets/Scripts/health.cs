@@ -50,6 +50,10 @@ public class health : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
         int indx = GameMode.Instance.findplayerindex(photonView.Owner.ActorNumber);
         if (indx < 0) return;
         GameMode.Instance.ScoreTable[indx].isAlive = true;
+        if (photonView.IsMine)
+        {
+            PlayerManager.LocalPlayerInstance = this.gameObject;
+        }
     }
 
     void Start()
