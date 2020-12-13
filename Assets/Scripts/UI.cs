@@ -216,12 +216,16 @@ public class UI : MonoBehaviour
         }
         for (int i = 0; i < KillTable.transform.childCount; ++i)
         {
-            int player1 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].x;
-            int player2 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].y;
-            int tmp1 = gameMode.findplayerindex(player1);
-            int tmp2 = gameMode.findplayerindex(player2);
-            string txt1 = (tmp1 < 0) ? "???" : gameMode.ScoreTable[tmp1].nick;
-            string txt2 = (tmp2 < 0) ? "???" : gameMode.ScoreTable[tmp2].nick;
+            //int player1 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].x;
+            //int player2 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i].y;
+            string player1 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i][0];
+            string player2 = gameMode.KillTable[gameMode.KillTable.Count - 1 - i][1];
+            //int tmp1 = gameMode.findplayerindex(player1);
+            //int tmp2 = gameMode.findplayerindex(player2);
+            //string txt1 = (tmp1 < 0) ? "???" : gameMode.ScoreTable[tmp1].nick;
+            //string txt2 = (tmp2 < 0) ? "???" : gameMode.ScoreTable[tmp2].nick;
+            string txt1 = (player1.Length == 0) ? "???" : player1;
+            string txt2 = (player2.Length == 0) ? "???" : player2;
             KillTable.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = txt2 + " pwned by " + txt1;
             //gameMode.ScoreTable[gameMode.findplayerindex(player2)].nick + " pwned by "
             //+ gameMode.ScoreTable[gameMode.findplayerindex(player1)].nick;

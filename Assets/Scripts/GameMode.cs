@@ -112,7 +112,8 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
     public bool friendlyfire = false;
     public List<Score> ScoreTable = new List<Score>();
     //[HideInInspector]
-    public List<Vector3Int> KillTable = new List<Vector3Int>();
+    //public List<Vector3Int> KillTable = new List<Vector3Int>();
+    public List<string[]> KillTable = new List<string[]>();
     public int SpawnNumberOfEnemies;
 
     public event System.Action<int,int> OnKillRegistered;
@@ -352,7 +353,8 @@ public class GameMode : MonoBehaviourPunCallbacks, IPunObservable
             ScoreTable[indx2].isAlive = false;
         }
         else { return; }
-        KillTable.Add(new Vector3Int(player1, player2, 0));
+        //KillTable.Add(new Vector3Int(player1, player2, 0));
+        KillTable.Add(new string[2] { ScoreTable[indx1].nick, ScoreTable[indx2].nick });
         if (OnKillRegistered == null) return;
         OnKillRegistered(player1,player2);
     }
