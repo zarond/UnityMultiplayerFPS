@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 [RequireComponent(typeof (AudioSource))]
 public class characteraudio : MonoBehaviour
 {
@@ -21,6 +24,8 @@ public class characteraudio : MonoBehaviour
 
     int c = 0;
     float jumpedlasttime = 0.0f; // чтобы звук прыжка не спамился
+
+    private PhotonView photonView = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +36,7 @@ public class characteraudio : MonoBehaviour
         maxspd = mov.speed;
         maxspd = mov.RunSpeed;
         //InvokeRepeating("playstep", 0, 0.5f);
+        photonView = PhotonView.Get(this);
     }
 
     // Update is called once per frame
@@ -45,8 +51,12 @@ public class characteraudio : MonoBehaviour
                 playstep(); 
             s = (s+1) % stepstime.Length; 
         }
-        if (mov.jump && mov.isGrounded) { 
-            if (Time.time - jumpedlasttime>0.1f) playjump();
+        if (mov.jump && mov.isGrounded) {
+            if (Time.time - jumpedlasttime > 0.1f) 
+            { 
+                //playjump();
+                photonView.RPC("playjump", RpcTarget.All);
+            };
             jumpedlasttime = Time.time;
         }
 
@@ -63,6 +73,8 @@ public class characteraudio : MonoBehaviour
         vol = volumestepscurve.Evaluate(vol);//Mathf.Pow(vol,8);
         source.PlayOneShot(steps[(++c) % steps.Length],vol);
     }
+
+    [PunRPC]
     void playjump()
     {
         source.PlayOneShot(jump, 0.5f);

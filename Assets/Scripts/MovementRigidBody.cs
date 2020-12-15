@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 //using UnityEngine.Networking; //
 
+using Photon.Pun;
+using Photon.Realtime;
+
 [RequireComponent(typeof(Rigidbody))]
 
-public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
+public class MovementRigidBody : MonoBehaviour, IPunObservable//NetworkBehaviour//MonoBehaviour
 {
     public Rigidbody Character { get; private set; }
     private CapsuleCollider collider;
@@ -46,9 +49,44 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 
     public bool isGrounded { get; private set; }
 
+    void Awake() {
+        photonView = GetComponent<PhotonView>();
+    }
+
+    #region IPunObservable implementation
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            if (photonView.IsMine)
+            {
+                //Debug.Log("send data about weapon change" + receivedWeaponChange);
+                stream.SendNext(isGrounded);
+                //stream.SendNext(jump);
+            }
+            // We own this player: send the others our data
+        }
+        else
+        {
+            if (photonView.IsMine == false)
+            {
+                //ActiveSlot = (int)stream.ReceiveNext();
+                isGrounded = (bool)stream.ReceiveNext();
+                //jump = (bool)stream.ReceiveNext();
+                //Debug.Log("get data about weapon change" + receivedWeaponChange);
+            }
+            // Network player, receive data
+
+        }
+    }
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
+
+        photonView = GetComponent<PhotonView>();
+
         Character = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
         //Cam = Camera.main.transform;
@@ -59,6 +97,11 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
 
     void SetLook()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) // Чтобы при повороте мыши поворачивался только свой персонаж
+        {
+            return;
+        }
+
         //MouseInput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         Vector3 ToCam = Cam.forward;
 
@@ -98,7 +141,8 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
         {
             Debug.DrawRay(contact.point, contact.normal, Color.red);
             //if (transform.InverseTransformPoint(contact.point).y <= -0.5f) isGrounded = true;
-            if (transform.InverseTransformPoint(contact.point).y < -(collider.height/2-collider.radius) && Vector3.Dot(contact.normal,transform.up)>0.5f) isGrounded = true;
+            if (photonView.IsMine)
+                if (transform.InverseTransformPoint(contact.point).y < -(collider.height/2-collider.radius) && Vector3.Dot(contact.normal,transform.up)>0.5f) isGrounded = true;
         }
         
     }
@@ -108,8 +152,17 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
         SetLook();
     }
 
+
+
+    private PhotonView photonView;
+
     void FixedUpdate()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
+
         RestoreBalance();
 
         //WalkOver();
@@ -220,7 +273,8 @@ public class MovementRigidBody : MonoBehaviour//NetworkBehaviour//MonoBehaviour
         //if (isGrounded && jump) Character.velocity = new Vector3(Character.velocity.x, JumpSpeed, Character.velocity.z);
         //Debug.Log(Character.velocity.magnitude);
 
-        isGrounded = false;
+        if (photonView.IsMine)
+            isGrounded = false;
     }
 
 }

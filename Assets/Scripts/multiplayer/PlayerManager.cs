@@ -1,0 +1,47 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+using Photon.Pun;
+using Photon.Realtime;
+
+public class PlayerManager : MonoBehaviourPun
+{
+    [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
+    public static GameObject LocalPlayerInstance;
+    public GameObject camHandler;
+
+    void Awake()
+    {
+        // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
+        if (photonView.IsMine)
+        {
+            PlayerManager.LocalPlayerInstance = this.gameObject;
+            //camHandler = GetChildWithName(this, "CameraHandler");
+            camHandler = this.transform.Find("CameraHandler").gameObject;
+            camHandler.SetActive(true);
+            
+        }
+        else
+        {
+            camHandler = this.transform.Find("CameraHandler").gameObject;
+            camHandler.SetActive(true);
+            camHandler.transform.Find("Main Camera").gameObject.SetActive(false);
+            camHandler.transform.Find("fpsrig").gameObject.SetActive(false);
+        }
+        // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
+        DontDestroyOnLoad(this.gameObject);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Debug.Log("Player team: "+(int)PhotonNetwork.LocalPlayer.CustomProperties["PlayerTeam"]);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}

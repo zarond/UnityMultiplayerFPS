@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 public class FPSMode : MonoBehaviour
 {
     public bool firstpersonmode = true;
@@ -9,25 +12,39 @@ public class FPSMode : MonoBehaviour
     public SkinnedMeshRenderer[] thirdpersonrig;
     WeaponHolder weapon;
     Vector3 originaloffset;
+
+    private PhotonView photonView;
+
     // Start is called before the first frame update
     void Start()
     {
+        photonView = GetComponent<PhotonView>();
+
         weapon = GetComponentInChildren<WeaponHolder>();
         originaloffset = this.transform.GetChild(2).transform.localPosition;
-        if (firstpersonmode) ChangeMode(true);
+
+        if (photonView.IsMine)
+        {
+            if (firstpersonmode) ChangeMode(true);
+        }
         else ChangeMode(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F)) ChangeMode(true);
-        if (Input.GetKeyDown(KeyCode.T)) ChangeMode(false);
+        if (photonView.IsMine)
+        {
+            if (Input.GetKeyDown(KeyCode.F)) ChangeMode(true); // Firstperson
+            if (Input.GetKeyDown(KeyCode.T)) ChangeMode(false); // Trirdperson
+        }
+        
         //weapon.receivedWeaponChange;
         //weapon.Weapons[weapon.ActiveWeapon].gameObject.GetComponent<MeshRenderer>().mes;
     }
     // надо получше сделать
-    void ChangeMode(bool ch) { 
+    void ChangeMode(bool ch) {
+        Debug.Log("Changing mod on " + ch);
         if (ch) {
             firstpersonmode = true;
             weapon.WeaponPosCorrection = false;

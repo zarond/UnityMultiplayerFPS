@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponHolder : MonoBehaviour
+using Photon.Pun;
+using Photon.Realtime;
+
+public class WeaponHolder : MonoBehaviour, IPunObservable
 {
     public List<Weapon> Weapons = new List<Weapon>();
     //public List<Component> Weapons = new List<Component>();
@@ -12,7 +15,7 @@ public class WeaponHolder : MonoBehaviour
     public int[] maxAmmo = new int[Constants.GlobalNumberOfWeapons];
     //[HideInInspector]
     public int ActiveWeapon { get; private set; } = 0 ;
-    [HideInInspector]
+    //[HideInInspector]
     public int ActiveSlot = 0;
     [HideInInspector]
     public bool receivedWeaponChange = false;
@@ -30,6 +33,36 @@ public class WeaponHolder : MonoBehaviour
     public bool[] shootStates = new bool[3];
 
     Vector3 originalPosWeapon;
+
+    #region IPunObservable implementation
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            if (PhotonView.Get(this).IsMine)
+            {
+                //Debug.Log("send data about weapon change" + receivedWeaponChange);
+                stream.SendNext(ActiveSlot);
+                stream.SendNext(receivedWeaponChange);
+            }
+            // We own this player: send the others our data
+        }
+        else
+        {
+            if (PhotonView.Get(this).IsMine == false)
+            {
+                //ActiveSlot = (int)stream.ReceiveNext();
+                int tmp = (int)stream.ReceiveNext();
+                receivedWeaponChange = (bool)stream.ReceiveNext();
+                if (tmp != ActiveSlot) receivedWeaponChange = true;
+                ActiveSlot = tmp;
+                //Debug.Log("get data about weapon change" + receivedWeaponChange);
+            }
+            // Network player, receive data
+
+        }
+    }
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -93,7 +126,12 @@ public class WeaponHolder : MonoBehaviour
             Weapons[ActiveWeapon].gameObject.SetActive(true);
             leftHandPoint = Weapons[ActiveWeapon].leftHandPoint;
             rightHandPoint = Weapons[ActiveWeapon].rightHandPoint;
+
+            receivedWeaponChange = false; // new
+            Debug.Log("weapon change");
         }
+
+        if (PhotonView.Get(this).IsMine == false) return;
 
         //Ray ScreenVector = Cam.ScreenPointToRay(new Vector3(Screen.width *0.5f, Screen.height*0.5f,0.0f));
         int layer = ~(1 << 9); // маска слоя все кроме физического коллайдера персонажей
@@ -116,7 +154,7 @@ public class WeaponHolder : MonoBehaviour
             }
         } //по хорошему в отдельную функцию бы shootgun()
 
-        receivedWeaponChange = false; // new
+        //receivedWeaponChange = false; // new
 
     }
 }

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 //[RequireComponent(typeof(SphereCollider))]
 
 public class PickUpAmmo : PickUp
@@ -10,10 +13,13 @@ public class PickUpAmmo : PickUp
     public int weaponid;
     public int numberofammo;
 
-    //private void Start()
-   //{
-    //    GetComponent<SphereCollider>().
-    //}
+    private PhotonView photonView;
+
+    private void Start()
+    {
+        photonView = GetComponent<PhotonView>();
+        photonView.SetOwnerInternal(PhotonNetwork.MasterClient, PhotonNetwork.MasterClient.ActorNumber);
+    }
 
     override public void PickUpObject(PickUpSystem WhoPicked)
     {
@@ -24,7 +30,20 @@ public class PickUpAmmo : PickUp
         {
             cmp.Ammo[weaponid] += numberofammo;
             //WhoPicked.Global.PickUps.Remove(this);
-            Destroy(this.gameObject);
+            if (photonView.IsMine)
+            {
+                PhotonNetwork.Destroy(this.gameObject); //Destroy(this.gameObject);
+            }
+            else // Вроде и так работает, но на всякий
+            {
+                Debug.Log("transfering ownership from " + photonView.Owner.NickName);
+                //photonView.RequestOwnership();
+                //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+                //Debug.Log("owner is now " + photonView.Owner.NickName + " / should be " + PhotonNetwork.LocalPlayer.NickName);
+                photonView.SetOwnerInternal(PhotonNetwork.LocalPlayer, PhotonNetwork.LocalPlayer.ActorNumber);
+                Debug.Log("owner is now " + photonView.Owner.NickName + " / should be " + PhotonNetwork.LocalPlayer.NickName);
+                PhotonNetwork.Destroy(this.gameObject);
+            }
         }
         else
         {
